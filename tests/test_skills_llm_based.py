@@ -58,6 +58,30 @@ def test_extract_ux_context_defaults_personas_journey_to_empty_when_absent(monke
     assert contexto["journey_reference"] == ""
 
 
+def test_extract_ux_context_converte_lista_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve 'personas'/
+    'jornada_usuario' como lista JSON em vez de uma única string."""
+    monkeypatch.setattr(
+        extract_ux_context_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "titulo": "t",
+            "contexto": "c",
+            "personas": ["- Cidadãos: buscam consultas médicas", "- Agentes: atendem no local"],
+            "jornada_usuario": ["- Solicitação de agendamento", "- Registro pelo agente"],
+        },
+    )
+
+    contexto = extract_ux_context_module.extract_ux_context("prd", "story")
+
+    assert contexto["personas_reference"] == (
+        "- Cidadãos: buscam consultas médicas\n- Agentes: atendem no local"
+    )
+    assert contexto["journey_reference"] == (
+        "- Solicitação de agendamento\n- Registro pelo agente"
+    )
+
+
 def test_identify_user_flows_maps_json_to_userflow(monkeypatch):
     monkeypatch.setattr(
         identify_user_flows_module,

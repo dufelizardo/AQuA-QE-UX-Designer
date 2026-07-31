@@ -11,13 +11,22 @@ _SYSTEM = (
     "pontual entre ator e sistema, um conceito diferente de User Journey; se só existir 'Casos "
     "de Uso' e não existir 'Jornadas do Usuário' no PRD, responda com string vazia para a "
     "jornada, nunca use o conteúdo de Casos de Uso como substituto.\n\n"
-    "Cite os trechos literalmente, em prosa legível (frases completas ou lista com '- '), "
-    "nunca no formato \"Nome: 'descrição'\" (estilo dicionário serializado). Nunca crie uma "
-    "Persona ou Journey nova (essas seções já existem no PRD do Product Manager, GR-UX-4). Se "
-    "o PRD não tiver a seção correspondente, responda com string vazia — nunca invente uma "
-    "para preencher a lacuna. Baseie-se apenas no texto informado; nunca invente contexto que "
-    "não esteja lá."
+    "Cite os trechos literalmente, em prosa legível — frases completas separadas por quebra "
+    "de linha, nunca no formato \"Nome: 'descrição'\" (estilo dicionário serializado). Os "
+    "campos 'personas' e 'jornada_usuario' devem sempre ser uma única string de texto, nunca "
+    "uma lista/array JSON, mesmo quando o conteúdo tem múltiplos itens — nesse caso, junte os "
+    "itens na mesma string, um por linha. Nunca crie uma Persona ou Journey nova (essas "
+    "seções já existem no PRD do Product Manager, GR-UX-4). Se o PRD não tiver a seção "
+    "correspondente, responda com string vazia — nunca invente uma para preencher a lacuna. "
+    "Baseie-se apenas no texto informado; nunca invente contexto que não esteja lá."
 )
+
+
+def _texto_ou_lista(valor) -> str:
+    """Defesa contra o LLM devolver uma lista em vez de uma única string para personas/jornada."""
+    if isinstance(valor, list):
+        return "\n".join(str(item) for item in valor)
+    return valor or ""
 
 
 def extract_ux_context(texto_prd: str, texto_story_ou_epic: str) -> dict:
@@ -32,6 +41,6 @@ def extract_ux_context(texto_prd: str, texto_story_ou_epic: str) -> dict:
     return {
         "title": dados.get("titulo", ""),
         "context_problem": dados.get("contexto", ""),
-        "personas_reference": dados.get("personas", ""),
-        "journey_reference": dados.get("jornada_usuario", ""),
+        "personas_reference": _texto_ou_lista(dados.get("personas", "")),
+        "journey_reference": _texto_ou_lista(dados.get("jornada_usuario", "")),
     }
