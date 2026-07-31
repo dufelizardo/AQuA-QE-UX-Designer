@@ -6,7 +6,7 @@ O AQuA-QE UX Designer é o quarto agente da plataforma AQuA-QE, especializado em
 
 Este documento descreve a Fase 1 do agente — deliberadamente mais enxuta do que a especialidade completa de um UX Designer humano, porque metade do que pareceriam especialidades exclusivas (Personas, User Journey) já são responsabilidade do Product Manager, e outra parte (Wireframes, Protótipos, Design System) exige uma integração (Figma) que a plataforma ainda não tem — reservada para um futuro agente irmão, o AQuA-QE UI Designer.
 
-**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/` — 63 testes, 99% cobertura) está pronta (Fase 1/MVP).
+**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/` — 78 testes, 99% cobertura) está pronta (Fase 1/MVP).
 
 ## 2. Fundamentação metodológica
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 Um pipeline de skills orquestrado sequencialmente, com dois pontos de checagem antes de qualquer saída ser considerada válida: validação automática (checklist estrutural, Python puro) e revisão humana obrigatória. Ver `docs/agent/system_design.md` para o fluxo de dados completo.
 
-## 5. As 13 skills
+## 5. As 14 skills
 
 Skills sem LLM (Python puro, determinística):
 
@@ -52,7 +52,7 @@ Skills com LLM revisor independente (`OLLAMA_REVIEW_MODEL`, padrão `phi4` — d
 
 Skills de I/O externo:
 
-- `read_jira_issue` (leitura, Jira Cloud REST API), `read_confluence_page` (leitura, Confluence Cloud REST API), `get_confluence_publish_location`/`create_confluence_page` (escrita gated no Confluence, reaproveitados do Solution Architect).
+- `read_jira_issue` (leitura, Jira Cloud REST API), `read_confluence_page` (leitura, Confluence Cloud REST API), `get_confluence_publish_location`/`create_confluence_page`/`update_confluence_page` (escrita gated no Confluence, reaproveitados do Solution Architect).
 
 Detalhamento completo de entrada/saída/erros de cada skill em `docs/agent/skills.md`.
 
@@ -97,7 +97,7 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 
 ## 10. Qualidade e cobertura de testes
 
-63 testes, 99% de cobertura — mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
+78 testes, 99% de cobertura — mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
 
 ## 11. O que ainda falta (deliberadamente adiado, não esquecido)
 

@@ -8,7 +8,7 @@ Agente que gera UX Specifications (fluxos de navegação por tarefa, arquitetura
 
 Este é um **repositório standalone**, próprio, independente de qualquer monorepo — não assuma dependências herdadas de um workspace pai.
 
-**Status atual**: Fase 1 (MVP) implementada — `src/` tem models/skills/workflow/orchestrator/services completos, `run.py` funcional, `tests/` com 63 testes (99% cobertura, tudo mockado).
+**Status atual**: Fase 1 (MVP) implementada — `src/` tem models/skills/workflow/orchestrator/services completos, `run.py` funcional, `tests/` com 78 testes (99% cobertura, tudo mockado).
 
 ## Comandos essenciais
 
@@ -22,7 +22,7 @@ uv run pytest
 # Gerar uma UX Specification a partir de uma Story/Epic + PRD
 uv run python run.py --jira AQUAQE-10 --confluence <url-do-prd> --saida ux-spec.md
 
-# Ver todas as opções (--refinar, --publicar-confluence)
+# Ver todas as opções (--refinar, --publicar-confluence, --atualizar-confluence)
 uv run python run.py --help
 ```
 
@@ -40,7 +40,7 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 ```
 
 - `src/aqua_qe_ux_designer/models/` — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`. Sem `ChatMessage` — este agente não tem skill de chat (`agent_manifest.yaml` só lista `confluence`/`jira` como inputs).
-- `src/aqua_qe_ux_designer/skills/` — 13 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- `src/aqua_qe_ux_designer/skills/` — 14 funções de responsabilidade única (ver `docs/agent/skills.md`).
 - `src/aqua_qe_ux_designer/workflow/generate_ux_specification.py` — `generate_ux_specification`, `finalize_ux_specification` (validate→review), `refine_and_finalize_ux_specification`.
 - `src/aqua_qe_ux_designer/orchestrator/ux_designer.py` — ponto de entrada único, `handle_request(texto_prd, texto_ticket)`.
 - `src/aqua_qe_ux_designer/services/` — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado verbatim do Solution Architect).
@@ -57,7 +57,7 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 - **Sem piloto de provedor em nuvem nesta fase** (diferente de PM/PO/SA): este agente nasce só com Ollama local. O toggle `LLM_PROVIDER=nvidia|cerebras|google|groq` só é adicionado quando/se surgir necessidade real comprovada (rate limit, instabilidade) — mesmo padrão que motivou sua adição nos três agentes irmãos, nunca construído antecipadamente.
 - **Wireframes/Protótipos/Design System ficam fora** — responsabilidade do futuro agente irmão AQuA-QE UI Designer (ainda não iniciado), que exigirá a primeira integração não-textual da plataforma (Figma). Ver `WHITEPAPER.md`, seção 11.
 - **`jira_service` é apenas leitura** — mesmo princípio do Solution Architect; não há hoje um caso de uso real de write-back no Jira a partir de uma UX Specification.
-- **`confluence_service` tem escrita gated** — publicar (`--publicar-confluence`) sempre exige confirmação humana explícita no CLI e sempre cria a página como irmã da página de origem do PRD — reaproveita literalmente `get_confluence_publish_location`/`create_confluence_page` do Solution Architect.
+- **`confluence_service` tem escrita gated** — publicar (`--publicar-confluence`, cria página nova, sempre irmã da página de origem do PRD) ou atualizar (`--atualizar-confluence`, edita uma página existente informada) sempre exigem confirmação humana explícita no CLI, mutuamente exclusivos entre si — reaproveita literalmente `get_confluence_publish_location`/`create_confluence_page`/`update_confluence_page` do Solution Architect.
 - **Este agente nunca gera PRD** (Product Manager), **nunca gera Épicos/User Stories** (Product Owner), **nunca projeta arquitetura técnica** (Solution Architect). Consome os artefatos já prontos desses três agentes e produz um único artefato novo, a UX Specification.
 - **Testes sempre mockam** Ollama/Jira/Confluence — nenhum teste em `tests/` deve fazer chamada real de rede, quando a implementação começar.
 

@@ -27,6 +27,7 @@ from aqua_qe_ux_designer.skills.get_confluence_publish_location import (  # noqa
 )
 from aqua_qe_ux_designer.skills.read_confluence_page import read_confluence_page  # noqa: E402
 from aqua_qe_ux_designer.skills.read_jira_issue import read_jira_issue  # noqa: E402
+from aqua_qe_ux_designer.skills.update_confluence_page import update_confluence_page  # noqa: E402
 from aqua_qe_ux_designer.workflow.generate_ux_specification import (  # noqa: E402
     refine_and_finalize_ux_specification,
 )
@@ -75,15 +76,33 @@ def _ciclo_de_refinamento(spec: UXSpecification) -> UXSpecification:
     return spec
 
 
-def _publicar_confluence(spec: UXSpecification, pagina_origem: str) -> None:
-    """Publica a UX Specification como página nova no Confluence, irmã do PRD de origem, sempre sob confirmação humana explícita."""
-    if not _perguntar_sim_nao("\nPublicar no Confluence como página irmã do PRD de origem?"):
-        return
-    titulo = input("Título da página no Confluence: ").strip()
+def _publicar_ou_atualizar_confluence(
+    spec: UXSpecification,
+    pagina_origem: str,
+    publicar_confluence: bool,
+    atualizar_confluence: str | None,
+) -> None:
+    """Cria uma página nova (irmã do PRD de origem) ou atualiza uma existente no Confluence, sempre sob confirmação humana explícita."""
     texto_formatado = format_ux_specification_markdown(spec)
-    space_key, parent_page_id = get_confluence_publish_location(pagina_origem)
-    url = create_confluence_page(texto_formatado, titulo, space_key, parent_page_id)
-    print(f"publicado no Confluence: {url}")
+
+    if atualizar_confluence:
+        if not _perguntar_sim_nao(
+            f"\nAtualizar a página {atualizar_confluence} no Confluence com esta UX Specification?"
+        ):
+            return
+        update_confluence_page(atualizar_confluence, texto_formatado)
+        print(f"página atualizada no Confluence: {atualizar_confluence}")
+        return
+
+    if publicar_confluence:
+        if not _perguntar_sim_nao(
+            "\nPublicar no Confluence como página irmã do PRD de origem?"
+        ):
+            return
+        titulo = input("Título da página no Confluence: ").strip()
+        space_key, parent_page_id = get_confluence_publish_location(pagina_origem)
+        url = create_confluence_page(texto_formatado, titulo, space_key, parent_page_id)
+        print(f"publicado no Confluence: {url}")
 
 
 def _rodar(
@@ -94,6 +113,7 @@ def _rodar(
     pagina_origem: str,
     ticket_reference: str,
     publicar_confluence: bool,
+    atualizar_confluence: str | None,
 ) -> None:
     spec = handle_request(texto_prd, texto_ticket, pagina_origem, ticket_reference)
     _imprimir_spec(spec)
@@ -111,8 +131,10 @@ def _rodar(
             arquivo.write(format_ux_specification_markdown(spec))
         print(f"exportado para: {saida}")
 
-    if publicar_confluence:
-        _publicar_confluence(spec, pagina_origem)
+    if publicar_confluence or atualizar_confluence:
+        _publicar_ou_atualizar_confluence(
+            spec, pagina_origem, publicar_confluence, atualizar_confluence
+        )
 
 
 def main() -> None:
@@ -134,13 +156,22 @@ def main() -> None:
             "aprovada, antes do aceite humano (que é sempre perguntado, com ou sem esta flag)."
         ),
     )
-    parser.add_argument(
+    publicacao = parser.add_mutually_exclusive_group()
+    publicacao.add_argument(
         "--publicar-confluence",
         action="store_true",
         dest="publicar_confluence",
         help=(
             "Após aceitar a UX Specification, pergunta o título e publica como página nova "
             "no Confluence, irmã da página de origem do PRD."
+        ),
+    )
+    publicacao.add_argument(
+        "--atualizar-confluence",
+        dest="atualizar_confluence",
+        help=(
+            "Após aceitar a UX Specification, atualiza a página existente informada (URL "
+            "completa ou ID) no Confluence, em vez de criar uma nova."
         ),
     )
     args = parser.parse_args()
@@ -155,6 +186,7 @@ def main() -> None:
         args.confluence,
         args.jira,
         args.publicar_confluence,
+        args.atualizar_confluence,
     )
 
 

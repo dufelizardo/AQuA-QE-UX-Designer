@@ -2,7 +2,7 @@
 
 > **Nota de fase**: este documento descreve as skills da Fase 1, na ordem do `agent_manifest.yaml` — todas implementadas em `../../src/aqua_qe_ux_designer/skills/`, no formato definido em `../standards/skill_standard.md`. Tipos de entrada/saída referem-se às estruturas de `output_schema.md`, implementadas em `../../src/aqua_qe_ux_designer/models/`.
 >
-> `extract_ux_context`, `identify_user_flows`, `design_information_architecture`, `review_accessibility`, `generate_ux_clarifying_questions` e `refine_ux_specification` usarão o LLM gerador (`../../src/aqua_qe_ux_designer/services/llm_service.py::generator_model()`; Ollama local, `OLLAMA_MODEL`/padrão `mistral` — sem piloto de provedor em nuvem nesta fase, ver `system_design.md`). `validate_ux_specification` e `format_ux_specification_markdown` serão Python puro, sem LLM (ver `evaluation.md`). `review_ux_specification` usará o LLM revisor (`llm_service.py::reviewer_model()`; Ollama `OLLAMA_REVIEW_MODEL`/padrão `phi4`), sempre diferente do gerador, fundamentado nas 10 Heurísticas de Nielsen. `read_jira_issue`/`read_confluence_page` usarão a API REST do Jira/Confluence Cloud — **apenas leitura**. `create_confluence_page`/`get_confluence_publish_location` **escreverão** no Confluence Cloud (Jira continua apenas leitura) — sempre atrás de confirmação humana explícita no CLI (`run.py`), reaproveitando o padrão já provado no Solution Architect.
+> `extract_ux_context`, `identify_user_flows`, `design_information_architecture`, `review_accessibility`, `generate_ux_clarifying_questions` e `refine_ux_specification` usarão o LLM gerador (`../../src/aqua_qe_ux_designer/services/llm_service.py::generator_model()`; Ollama local, `OLLAMA_MODEL`/padrão `mistral` — sem piloto de provedor em nuvem nesta fase, ver `system_design.md`). `validate_ux_specification` e `format_ux_specification_markdown` serão Python puro, sem LLM (ver `evaluation.md`). `review_ux_specification` usará o LLM revisor (`llm_service.py::reviewer_model()`; Ollama `OLLAMA_REVIEW_MODEL`/padrão `phi4`), sempre diferente do gerador, fundamentado nas 10 Heurísticas de Nielsen. `read_jira_issue`/`read_confluence_page` usarão a API REST do Jira/Confluence Cloud — **apenas leitura**. `create_confluence_page`/`update_confluence_page`/`get_confluence_publish_location` **escreverão** no Confluence Cloud (Jira continua apenas leitura) — sempre atrás de confirmação humana explícita no CLI (`run.py`), reaproveitando o padrão já provado no Solution Architect.
 
 ## read_confluence_page
 
@@ -39,6 +39,15 @@
 - **Efeitos colaterais**: chamada HTTP `POST` ao Confluence Cloud — **escreve** em sistema externo.
 - **Erros esperados**: credencial ausente, espaço/ancestral inválido.
 - **Dependências**: consome `get_confluence_publish_location` e `format_ux_specification_markdown`.
+
+## update_confluence_page
+
+- **Descrição**: atualiza uma página da UX Specification já existente no Confluence Cloud (aceita URL completa ou apenas o ID), preservando título e incrementando a versão. Só é chamada pelo CLI após confirmação humana explícita (RULE-UX-6), e é mutuamente exclusiva com `create_confluence_page` numa mesma execução (`--atualizar-confluence`/`--publicar-confluence`).
+- **Entrada**: `pagina: str` (URL/ID da página a atualizar), `texto: str` (Markdown convertido para storage format).
+- **Saída**: `None`.
+- **Efeitos colaterais**: chamadas HTTP `GET`+`PUT` ao Confluence Cloud — **escreve** em sistema externo.
+- **Erros esperados**: credencial ausente, página inexistente ou sem permissão.
+- **Dependências**: consome `format_ux_specification_markdown`.
 
 ## extract_ux_context
 

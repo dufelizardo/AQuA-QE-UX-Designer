@@ -6,7 +6,7 @@ AQuA-QE UX Designer is the platform's fourth agent, specialized in translating a
 
 This document describes Phase 1 of the agent — deliberately leaner than a human UX Designer's full specialty set, because half of what would look like exclusive UX specialties (Personas, User Journey) are already the Product Manager's responsibility, and another part (Wireframes, Prototypes, Design System) requires an integration (Figma) the platform doesn't have yet — reserved for a future sibling agent, AQuA-QE UI Designer.
 
-**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/` — 63 tests, 99% coverage) is done (Phase 1/MVP).
+**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/` — 78 tests, 99% coverage) is done (Phase 1/MVP).
 
 ## 2. Methodological grounding
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 A sequentially orchestrated pipeline of skills, with two checkpoints before any output is considered valid: automatic validation (structural checklist, pure Python) and mandatory human review. See `docs/agent/system_design.md` for the full data flow.
 
-## 5. The 13 skills
+## 5. The 14 skills
 
 Skills with no LLM (pure Python, deterministic):
 
@@ -52,7 +52,7 @@ Skills with independent reviewer LLM (`OLLAMA_REVIEW_MODEL`, default `phi4` — 
 
 External I/O skills:
 
-- `read_jira_issue` (read, Jira Cloud REST API), `read_confluence_page` (read, Confluence Cloud REST API), `get_confluence_publish_location`/`create_confluence_page` (gated write to Confluence, reused from Solution Architect).
+- `read_jira_issue` (read, Jira Cloud REST API), `read_confluence_page` (read, Confluence Cloud REST API), `get_confluence_publish_location`/`create_confluence_page`/`update_confluence_page` (gated write to Confluence, reused from Solution Architect).
 
 Full input/output/error detail for each skill is in `docs/agent/skills.md`.
 
@@ -97,7 +97,7 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 
 ## 10. Quality and test coverage
 
-63 tests, 99% coverage — same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
+78 tests, 99% coverage — same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
 
 ## 11. What's still missing (deliberately deferred, not forgotten)
 

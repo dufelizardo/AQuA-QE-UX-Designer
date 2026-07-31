@@ -44,9 +44,9 @@
 
 ## RULE-UX-6
 
-- **Descrição**: publicar uma página no Confluence nunca acontece automaticamente, e a página publicada é sempre irmã da página de origem do PRD.
-- **Gatilho**: `create_confluence_page` seria chamada.
-- **Ação esperada**: o CLI (`run.py`) sempre pergunta confirmação explícita antes de publicar; `get_confluence_publish_location` deriva espaço/ancestral da página de origem, nunca de configuração manual solta.
+- **Descrição**: publicar ou atualizar uma página no Confluence nunca acontece automaticamente; a página publicada (nova) é sempre irmã da página de origem do PRD, e atualizar exige a página existente ser informada explicitamente pelo usuário (nunca inferida).
+- **Gatilho**: `create_confluence_page` ou `update_confluence_page` seria chamada.
+- **Ação esperada**: o CLI (`run.py`) sempre pergunta confirmação explícita antes de publicar/atualizar (`--publicar-confluence`/`--atualizar-confluence`, mutuamente exclusivos); `get_confluence_publish_location` deriva espaço/ancestral da página de origem, nunca de configuração manual solta.
 - **Severidade**: bloqueante.
 - **Origem**: mesmo espírito do guardrail transversal "Sem aprovação automática", estendido às escritas no Confluence (mesma regra já aplicada no Solution Architect).
 

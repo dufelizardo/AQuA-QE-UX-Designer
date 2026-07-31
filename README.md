@@ -14,7 +14,7 @@ This project has its own git repository, independent from the root monorepo (per
 - Generates accessibility recommendations grounded in WCAG 2.2 — always as a recommendation to verify, never a compliance certification.
 - Evaluates flows via heuristic review (Nielsen's 10 Heuristics) — never called "usability testing," since the agent has no access to real users.
 - Runs a human-in-the-loop refinement cycle when review rejects the output.
-- Exports the result as Markdown and, optionally, publishes it as a sibling page of the PRD on Confluence.
+- Exports the result as Markdown and, optionally, publishes it as a sibling page of the PRD on Confluence or updates an existing page.
 
 ## What this agent does **not** do (by design)
 
@@ -26,7 +26,7 @@ This project has its own git repository, independent from the root monorepo (per
 ## Architecture (summary — full detail in `docs/agent/system_design.md`)
 
 - **`src/aqua_qe_ux_designer/models/`** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ArtifactStatus` enum.
-- **`src/aqua_qe_ux_designer/skills/`** — 13 single-responsibility functions (see `docs/agent/skills.md`).
+- **`src/aqua_qe_ux_designer/skills/`** — 14 single-responsibility functions (see `docs/agent/skills.md`).
 - **`src/aqua_qe_ux_designer/workflow/`** — orchestrates the skill sequence.
 - **`src/aqua_qe_ux_designer/orchestrator/`** — single entry point (`handle_request`).
 - **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama by default, no cloud provider pilot at this phase), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect).
@@ -52,4 +52,4 @@ This project has its own git repository, independent from the root monorepo (per
 
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) and `docs/standards/` are complete. `knowledge/methodology/` has the five real documents grounding the quality criteria (Nielsen's 10 Heuristics, WCAG 2.2, Information Architecture principles, ISO 9241-210, Laws of UX) — no criterion was invented apart from them. `knowledge/templates/ux_specification.md` defines the export format (12 sections, including PRD references and explicit future-phase placeholders).
 
-`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), and `tests/` (63 tests, 99% coverage) are implemented. See `WHITEPAPER.en.md`, section 11, for what's deliberately left out of this phase.
+`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), and `tests/` (78 tests, 99% coverage) are implemented. See `WHITEPAPER.en.md`, section 11, for what's deliberately left out of this phase.

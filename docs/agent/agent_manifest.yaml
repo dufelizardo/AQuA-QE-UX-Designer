@@ -23,6 +23,7 @@ skills:
   - read_jira_issue
   - get_confluence_publish_location
   - create_confluence_page
+  - update_confluence_page
   - extract_ux_context
   - identify_user_flows
   - design_information_architecture
