@@ -4,7 +4,7 @@
 
 ## Fontes de contexto (Fase 1)
 
-- **`knowledge/methodology/`** — sempre disponível; base para as 10 Heurísticas de Nielsen, WCAG 2.1 e princípios de Arquitetura da Informação. Pequeno o suficiente para caber direto no prompt de cada skill — sem RAG nesta fase.
+- **`knowledge/methodology/`** — sempre disponível; base para as 10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210 e Laws of UX. Pequeno o suficiente para caber direto no prompt de cada skill — sem RAG nesta fase.
 - **`knowledge/templates/`** — estrutura de saída (`ux_specification.md`).
 - **PRD de origem (via Confluence)** — fonte de Personas/Journeys já existentes, passada como contexto de leitura, nunca regerada (GR-UX-4).
 - **Saída de skills anteriores na mesma execução** — ex.: `extract_ux_context` alimenta `identify_user_flows`, que também recebe o texto completo da Story/Epic.

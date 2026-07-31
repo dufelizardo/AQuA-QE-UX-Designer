@@ -12,7 +12,7 @@ Entrada (PRD via Confluence + Epics/Stories via Jira)
    → extract_ux_context (título + contexto do problema; reaproveita Personas/Journeys já presentes no PRD)
    → identify_user_flows (por Story/tarefa)
    → design_information_architecture (por Épico)
-   → review_accessibility (recomendações WCAG 2.1)
+   → review_accessibility (recomendações WCAG 2.2)
    → validate_ux_specification (checklist automático)
    → review_ux_specification (LLM revisor independente — phi4 — heurísticas de Nielsen)
    → [se reprovado] generate_ux_clarifying_questions → resposta humana → refine_ux_specification → revalidar
@@ -27,7 +27,7 @@ Entrada (PRD via Confluence + Epics/Stories via Jira)
 - **Workflow** — orquestração da sequência de skills (`generate_ux_specification`, `finalize_ux_specification`), implementado em `../../src/aqua_qe_ux_designer/workflow/`.
 - **Skills** — funções descritas em `skills.md`, implementadas em `../../src/aqua_qe_ux_designer/skills/`.
 - **Modelos de dados** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ChatMessage`, enum `ArtifactStatus`, implementados em `../../src/aqua_qe_ux_designer/models/`, conforme `output_schema.md`.
-- **Fontes de conhecimento** — `knowledge/methodology/` (10 Heurísticas de Nielsen, WCAG 2.1, princípios de Arquitetura da Informação), consumido diretamente no prompt de cada skill (sem RAG nesta fase — o volume cabe direto no contexto, mesma decisão de PM/SA na Fase 1).
+- **Fontes de conhecimento** — `knowledge/methodology/` (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX), consumido diretamente no prompt de cada skill (sem RAG nesta fase — o volume cabe direto no contexto, mesma decisão de PM/SA na Fase 1).
 - **Interfaces externas** — entrada: página Confluence (PRD, leitura) e ticket Jira (Epic/Story, leitura); saída: arquivo Markdown exportado (`format_ux_specification_markdown`) e, opcionalmente, uma página no Confluence (`create_confluence_page`), sempre irmã da página de origem do PRD e sempre atrás de confirmação humana.
 
 ## Fluxo de dados
@@ -36,7 +36,7 @@ Entrada (PRD via Confluence + Epics/Stories via Jira)
 2. `extract_ux_context` identifica título e contexto do problema; Personas/Journeys já presentes no texto do PRD são passadas como contexto às skills seguintes, nunca regeradas.
 3. `identify_user_flows` gera o fluxo de navegação para a Story/tarefa em questão.
 4. `design_information_architecture` gera o mapa de navegação do Épico.
-5. `review_accessibility` gera recomendações WCAG 2.1 sobre o fluxo e a arquitetura da informação.
+5. `review_accessibility` gera recomendações WCAG 2.2 sobre o fluxo e a arquitetura da informação.
 6. `validate_ux_specification` aplica o checklist automático; se reprovar, a UX Specification fica `pending_clarification`.
 7. Se aprovado no checklist, `review_ux_specification` (LLM independente, fundamentado nas heurísticas de Nielsen) avalia o conjunto.
 8. Se a revisão reprovar, o ciclo de refinamento humano-no-loop (mesmo padrão de PM/PO/SA) entra em ação.

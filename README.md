@@ -11,7 +11,7 @@ This project has its own git repository, independent from the root monorepo (per
 - Reads a Story/Epic (Jira) and the associated PRD (Confluence).
 - Identifies a concrete User Flow — the sequence of steps/screens to complete the described task, traceable to the source requirement.
 - Generates an Information Architecture for the Epic's scope.
-- Generates accessibility recommendations grounded in WCAG 2.1 — always as a recommendation to verify, never a compliance certification.
+- Generates accessibility recommendations grounded in WCAG 2.2 — always as a recommendation to verify, never a compliance certification.
 - Evaluates flows via heuristic review (Nielsen's 10 Heuristics) — never called "usability testing," since the agent has no access to real users.
 - Runs a human-in-the-loop refinement cycle when review rejects the output.
 - Exports the result as Markdown and, optionally, publishes it as a sibling page of the PRD on Confluence.
@@ -50,6 +50,6 @@ This project has its own git repository, independent from the root monorepo (per
 
 ## Detailed status
 
-`docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) and `docs/standards/` are complete. `knowledge/methodology/` has the three real documents grounding the quality criteria (Nielsen's 10 Heuristics, WCAG 2.1, Information Architecture principles) — no criterion was invented apart from them. `knowledge/templates/ux_specification.md` defines the export format.
+`docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) and `docs/standards/` are complete. `knowledge/methodology/` has the five real documents grounding the quality criteria (Nielsen's 10 Heuristics, WCAG 2.2, Information Architecture principles, ISO 9241-210, Laws of UX) — no criterion was invented apart from them. `knowledge/templates/ux_specification.md` defines the export format (12 sections, including PRD references and explicit future-phase placeholders).
 
 Not yet implemented: `src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), `tests/`. See `WHITEPAPER.en.md`, section 12, for the next implementation steps.

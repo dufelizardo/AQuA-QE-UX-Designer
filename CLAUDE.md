@@ -48,7 +48,7 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 ## Convenções críticas
 
 - **Nunca inventar** (GR-UX-1, `docs/agent/guardrails.md`): passo de fluxo ou elemento de arquitetura da informação só existe se rastreável à Story/Epic de entrada.
-- **Nunca certificar acessibilidade** (GR-UX-2): `review_accessibility` sempre recomenda verificar um critério WCAG 2.1 específico, nunca afirma conformidade como fato.
+- **Nunca certificar acessibilidade** (GR-UX-2): `review_accessibility` sempre recomenda verificar um critério WCAG 2.2 específico, nunca afirma conformidade como fato.
 - **Nunca fabricar pesquisa/teste com usuário real** (GR-UX-3): a revisão do agente (`review_ux_specification`) é sempre avaliação heurística de especialista (10 Heurísticas de Nielsen), rotulada como tal — o agente não tem acesso a usuários reais nem telemetria de produto.
 - **Nunca gerar Personas ou User Journeys** (GR-UX-4, o guardrail mais importante deste agente): esses artefatos já existem no PRD do agente irmão AQuA-QE Product Manager (`synthesize_personas`/`identify_user_journeys`). `extract_ux_context` só lê essas seções como contexto — nenhuma skill deste agente as regenera. Se o PRD não tiver Personas/Journeys, isso é sinalizado como lacuna do PRD, nunca preenchido aqui.
 - **User Flow ≠ User Journey**: o Flow deste agente é de nível de navegação concreta (telas exatas de uma tarefa), mais granular que a Journey de negócio/emocional do PM — não é uma duplicata, ver `docs/agent/agent_design.md`.
@@ -64,5 +64,5 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 ## Onde procurar mais detalhe
 
 - `docs/agent/` — PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory (a spec formal completa do agente, escrita antes de qualquer código).
-- `knowledge/methodology/` — os frameworks reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.1, princípios de Arquitetura da Informação) — nenhum critério do agente foi inventado à parte desses documentos.
+- `knowledge/methodology/` — os frameworks reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério do agente foi inventado à parte desses documentos.
 - `WHITEPAPER.md` / `WHITEPAPER.en.md` — visão consolidada, inclui o que foi deliberadamente deixado fora da Fase 1 (seção 11).

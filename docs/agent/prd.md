@@ -22,7 +22,7 @@ Gerar uma UX Specification a partir de um PRD (Product Manager) e das Épicos/St
 - Ler Épicos/Stories via Jira (leitura apenas).
 - Para cada Story/Epic, identificar um Fluxo de Usuário (`UserFlow`) — sequência concreta de passos/telas de navegação para completar a tarefa descrita.
 - Gerar uma Arquitetura da Informação (`InformationArchitecture`) — mapa de navegação/categorização do escopo do Épico.
-- Gerar recomendações de acessibilidade fundamentadas em WCAG 2.1, sempre como recomendação a verificar, nunca afirmação de conformidade.
+- Gerar recomendações de acessibilidade fundamentadas em WCAG 2.2, sempre como recomendação a verificar, nunca afirmação de conformidade.
 - Avaliar os fluxos por meio de revisão heurística (10 Heurísticas de Nielsen) — nunca chamada de "teste de usabilidade" (não há usuário real envolvido).
 - Validar a saída contra um checklist automático antes de apresentá-la.
 - Suportar ciclo de refinamento humano-no-loop (perguntas de esclarecimento → resposta humana → refino).
@@ -45,7 +45,7 @@ Gerar uma UX Specification a partir de um PRD (Product Manager) e das Épicos/St
 2. Extrair título e contexto do problema a partir da fonte (reaproveitando Personas/Journeys já presentes no PRD como contexto, nunca regerando).
 3. Identificar um Fluxo de Usuário concreto por Story/tarefa, rastreável ao requisito de origem.
 4. Gerar uma Arquitetura da Informação para o escopo do Épico.
-5. Gerar recomendações de acessibilidade fundamentadas em WCAG 2.1.
+5. Gerar recomendações de acessibilidade fundamentadas em WCAG 2.2.
 6. Avaliar os fluxos via revisão heurística fundamentada nas 10 Heurísticas de Nielsen.
 7. Validar a saída contra um checklist automático (ao menos 1 fluxo + IA presente) antes de apresentá-la.
 8. Revisar com um segundo LLM independente do gerador.

@@ -13,8 +13,10 @@ This document describes Phase 1 of the agent — deliberately leaner than a huma
 No quality criterion used by this agent was invented. Each one is documented in `knowledge/methodology/` and referenced directly by the agent's skills and guardrails:
 
 - **Nielsen's 10 Usability Heuristics** (`nielsen_heuristics.md`) — grounds the heuristic review of flows (`review_ux_specification`).
-- **WCAG 2.1** (`wcag.md`) — grounds accessibility recommendations (`review_accessibility`).
+- **WCAG 2.2** (`wcag.md`) — grounds accessibility recommendations (`review_accessibility`).
 - **Information Architecture principles** (`information_architecture.md`, Rosenfeld & Morville) — grounds `design_information_architecture`.
+- **Laws of UX** (`laws_of_ux.md`, Jon Yablonski) — Hick's/Jakob's/Miller's Law and Cognitive Load, more concrete and operationalizable than Nielsen's Heuristics; ground `identify_user_flows`/`design_information_architecture` and complement `review_ux_specification`.
+- **ISO 9241-210** (`iso_9241_210.md`) — doesn't ground a single skill, but formally justifies why the whole agent follows an iterative generate→validate→review→refine→human-accept cycle instead of producing the UX Specification in one shot (see `docs/agent/agent_design.md`, item 8).
 
 ## 3. Design principles (guardrails)
 
@@ -46,7 +48,7 @@ Skills with generator LLM (`OLLAMA_MODEL`, default `mistral`):
 
 Skills with independent reviewer LLM (`OLLAMA_REVIEW_MODEL`, default `phi4` — deliberately a different model from the generator, to mitigate *self-preference bias*):
 
-- `review_ux_specification` — grounded in Nielsen's 10 Usability Heuristics.
+- `review_ux_specification` — grounded in Nielsen's 10 Usability Heuristics and the Laws of UX.
 
 External I/O skills:
 
@@ -91,7 +93,7 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 
 - **Local LLM via Ollama (sole provider at this phase)** — `mistral` for generation, `phi4` as independent reviewer. Unlike PM/PO/SA, **this agent is not born with the cloud provider pilot** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — that toggle was only added to the sibling agents after real, proven need (rate limits, instability); here, it's added when/if the same need arises, not built ahead of time.
 - **`uv`** for dependencies — standalone project (own repository, outside the monorepo that originated it).
-- **No RAG/embeddings at this phase** — `knowledge/methodology/` has only 3 files, small enough to fit directly in each skill's prompt.
+- **No RAG/embeddings at this phase** — `knowledge/methodology/` has only 5 files, small enough to fit directly in each skill's prompt.
 
 ## 10. Quality and test coverage
 

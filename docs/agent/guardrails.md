@@ -8,7 +8,7 @@ O agente nunca gera um passo de `UserFlow` ou um elemento de `InformationArchite
 
 ## GR-UX-2 — Nunca afirmar conformidade de acessibilidade como fato
 
-`review_accessibility` sempre apresenta suas recomendações fundamentadas em WCAG 2.1 como algo **a verificar**, nunca como uma certificação ("este fluxo está em conformidade com WCAG AA"). O agente não tem como validar conformidade real (isso exige ferramentas de auditoria/teste com usuários reais) — só pode apontar onde a estrutura do fluxo sugere risco de não conformidade.
+`review_accessibility` sempre apresenta suas recomendações fundamentadas em WCAG 2.2 como algo **a verificar**, nunca como uma certificação ("este fluxo está em conformidade com WCAG AA"). O agente não tem como validar conformidade real (isso exige ferramentas de auditoria/teste com usuários reais) — só pode apontar onde a estrutura do fluxo sugere risco de não conformidade.
 
 ## GR-UX-3 — Nunca fabricar pesquisa ou teste com usuário real
 

@@ -1,4 +1,4 @@
-# WCAG 2.1 — Princípios e critérios usados por este agente
+# WCAG 2.2 — Princípios e critérios usados por este agente
 
 > Fonte: W3C Web Content Accessibility Guidelines (WCAG) 2.1. Base para `review_accessibility` — o agente só **recomenda verificar** conformidade, nunca **certifica** conformidade (GR-UX-2); conformidade real exige ferramentas de auditoria e testes com usuários reais, fora do escopo deste agente.
 
@@ -19,4 +19,4 @@
 
 ## Como este agente usa este documento
 
-`review_accessibility` gera recomendações apontando qual critério WCAG 2.1 específico motiva cada recomendação (ex.: "o passo X de confirmação deveria seguir 3.3.1 — identificar o erro em texto, não só com cor") — sempre com o fraseado de "recomenda-se verificar", nunca "está em conformidade" (RULE-UX-2).
+`review_accessibility` gera recomendações apontando qual critério WCAG 2.2 específico motiva cada recomendação (ex.: "o passo X de confirmação deveria seguir 3.3.1 — identificar o erro em texto, não só com cor") — sempre com o fraseado de "recomenda-se verificar", nunca "está em conformidade" (RULE-UX-2).

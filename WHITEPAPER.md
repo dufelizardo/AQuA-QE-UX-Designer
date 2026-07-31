@@ -13,8 +13,10 @@ Este documento descreve a Fase 1 do agente — deliberadamente mais enxuta do qu
 Nenhum critério de qualidade deste agente foi inventado. Cada um é documentado em `knowledge/methodology/` e referenciado diretamente pelas skills e guardrails do agente:
 
 - **10 Heurísticas de Usabilidade de Nielsen** (`nielsen_heuristics.md`) — fundamenta a revisão heurística dos fluxos (`review_ux_specification`).
-- **WCAG 2.1** (`wcag.md`) — fundamenta as recomendações de acessibilidade (`review_accessibility`).
+- **WCAG 2.2** (`wcag.md`) — fundamenta as recomendações de acessibilidade (`review_accessibility`).
 - **Princípios de Arquitetura da Informação** (`information_architecture.md`, Rosenfeld & Morville) — fundamenta `design_information_architecture`.
+- **Laws of UX** (`laws_of_ux.md`, Jon Yablonski) — Lei de Hick/Jakob/Miller e Carga Cognitiva, mais concretas e operacionalizáveis que as Heurísticas de Nielsen; fundamentam `identify_user_flows`/`design_information_architecture` e complementam `review_ux_specification`.
+- **ISO 9241-210** (`iso_9241_210.md`) — não fundamenta uma skill isolada, mas justifica formalmente por que todo o agente segue um ciclo iterativo gerar→validar→revisar→refinar→aceite humano, em vez de produzir a UX Specification de uma só vez (ver `docs/agent/agent_design.md`, item 8).
 
 ## 3. Princípios de design (guardrails)
 
@@ -46,7 +48,7 @@ Skills com LLM gerador (`OLLAMA_MODEL`, padrão `mistral`):
 
 Skills com LLM revisor independente (`OLLAMA_REVIEW_MODEL`, padrão `phi4` — deliberadamente um modelo diferente do gerador, para mitigar *self-preference bias*):
 
-- `review_ux_specification` — fundamentada nas 10 Heurísticas de Nielsen.
+- `review_ux_specification` — fundamentada nas 10 Heurísticas de Nielsen e nas Laws of UX.
 
 Skills de I/O externo:
 
@@ -91,7 +93,7 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 
 - **LLM local via Ollama (único provedor nesta fase)** — `mistral` para geração, `phi4` como revisor independente. Diferente de PM/PO/SA, **este agente não nasce com o piloto de provedor em nuvem** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — esse toggle só foi adicionado nos agentes irmãos depois de necessidade real comprovada (rate limit, instabilidade); aqui, é adicionado quando/se a mesma necessidade surgir, não construído antecipadamente.
 - **`uv`** para dependências — projeto standalone (repositório próprio, fora do monorepo que o originou).
-- **Sem RAG/embeddings nesta fase** — `knowledge/methodology/` tem só 3 arquivos, pequeno o suficiente para caber direto no prompt de cada skill.
+- **Sem RAG/embeddings nesta fase** — `knowledge/methodology/` tem só 5 arquivos, pequeno o suficiente para caber direto no prompt de cada skill.
 
 ## 10. Qualidade e cobertura de testes
 

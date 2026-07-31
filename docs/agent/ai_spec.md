@@ -39,7 +39,7 @@ Se a entrada não for uma Story/Epic reconhecível, ou pedir explicitamente por 
 
 ## Limites de conhecimento
 
-- O agente assume como verdade o conteúdo de `knowledge/methodology/` (10 Heurísticas de Nielsen, WCAG 2.1, princípios de Arquitetura da Informação).
+- O agente assume como verdade o conteúdo de `knowledge/methodology/` (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX).
 - O agente não deve tratar conhecimento geral do modelo de linguagem sobre "boas práticas de UX" como substituto de rastreabilidade real à fonte — isso violaria GR-UX-1.
 - O agente nunca deve assumir que tem acesso a usuários reais ou telemetria de produto, mesmo que o prompt do usuário sugira isso.
 

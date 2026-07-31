@@ -51,7 +51,7 @@
 
 ## identify_user_flows
 
-- **Descrição**: identifica o fluxo de navegação concreto (sequência de passos/telas) para completar a tarefa descrita na Story, rastreável ao requisito de origem. Mais granular que a User Journey do PM — nível de navegação, não de jornada de negócio (ver `agent_design.md`, item 3).
+- **Descrição**: identifica o fluxo de navegação concreto (sequência de passos/telas) para completar a tarefa descrita na Story, rastreável ao requisito de origem. Mais granular que a User Journey do PM — nível de navegação, não de jornada de negócio (ver `agent_design.md`, item 3). Organiza os passos considerando a Lei de Hick e a Lei de Jakob (`../../knowledge/methodology/laws_of_ux.md`) — nunca como justificativa para adicionar um passo sem base real na Story (GR-UX-1).
 - **Entrada**: `texto_story: str`, `contexto: dict` (de `extract_ux_context`).
 - **Saída**: `UserFlow` (`name`, `steps: list[str]`, `source_reference`).
 - **Efeitos colaterais**: chamada ao LLM gerador.
@@ -60,7 +60,7 @@
 
 ## design_information_architecture
 
-- **Descrição**: gera o mapa de navegação/categorização para o escopo do Épico.
+- **Descrição**: gera o mapa de navegação/categorização para o escopo do Épico, seguindo os princípios de `../../knowledge/methodology/information_architecture.md` (categorização por tarefa, profundidade razoável) e a Lei de Miller/Carga Cognitiva (`../../knowledge/methodology/laws_of_ux.md`).
 - **Entrada**: `texto_epic: str`, `contexto: dict`.
 - **Saída**: `InformationArchitecture` (`sections: list[str]`, `navigation_notes: str`, `source_reference`).
 - **Efeitos colaterais**: chamada ao LLM gerador.
@@ -69,7 +69,7 @@
 
 ## review_accessibility
 
-- **Descrição**: gera recomendações de acessibilidade fundamentadas em WCAG 2.1 (`../../knowledge/methodology/wcag.md`) sobre o `UserFlow`/`InformationArchitecture` — sempre como recomendação a verificar, nunca certificação de conformidade (GR-UX-2).
+- **Descrição**: gera recomendações de acessibilidade fundamentadas em WCAG 2.2 (`../../knowledge/methodology/wcag.md`) sobre o `UserFlow`/`InformationArchitecture` — sempre como recomendação a verificar, nunca certificação de conformidade (GR-UX-2).
 - **Entrada**: `user_flow: UserFlow`, `information_architecture: InformationArchitecture`.
 - **Saída**: `list[str]`.
 - **Efeitos colaterais**: chamada ao LLM gerador.
@@ -87,7 +87,7 @@
 
 ## review_ux_specification
 
-- **Descrição**: revisa a UX Specification com um LLM diferente do gerador, fundamentado nas 10 Heurísticas de Nielsen (`../../knowledge/methodology/nielsen_heuristics.md`) — sempre rotulado como avaliação heurística de especialista, nunca como teste com usuário real (GR-UX-3).
+- **Descrição**: revisa a UX Specification com um LLM diferente do gerador, fundamentado nas 10 Heurísticas de Nielsen (`../../knowledge/methodology/nielsen_heuristics.md`) e nas Laws of UX (`../../knowledge/methodology/laws_of_ux.md`) — sempre rotulado como avaliação heurística de especialista, nunca como teste com usuário real (GR-UX-3).
 - **Entrada**: `spec: UXSpecification`.
 - **Saída**: `dict` (`aprovado: bool`, `problemas: list[str]`).
 - **Efeitos colaterais**: chamada ao LLM revisor.
@@ -114,7 +114,7 @@
 
 ## format_ux_specification_markdown
 
-- **Descrição**: exporta a UX Specification em Markdown, seguindo `../../knowledge/templates/ux_specification.md`.
+- **Descrição**: exporta a UX Specification em Markdown, seguindo as 12 seções de `../../knowledge/templates/ux_specification.md`. Preenche as seções geradas por este agente (Objetivo, Escopo, User Flows, Information Architecture, Acessibilidade, Regras de Usabilidade, Recomendações); as seções de Personas/User Journey ficam como referência ao PRD de origem, e Wireframes/Protótipos/Design System ficam marcados como fora de escopo desta fase — nunca preenchidos com conteúdo gerado por este agente (GR-UX-4).
 - **Entrada**: `spec: UXSpecification`.
 - **Saída**: `str`.
 - **Efeitos colaterais**: nenhum — Python puro, sem LLM.

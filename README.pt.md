@@ -11,7 +11,7 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 - Lê uma Story/Epic (Jira) e o PRD associado (Confluence).
 - Identifica um Fluxo de Usuário concreto — a sequência de passos/telas para completar a tarefa descrita, rastreável ao requisito de origem.
 - Gera uma Arquitetura da Informação para o escopo do Épico.
-- Gera recomendações de acessibilidade fundamentadas em WCAG 2.1 — sempre como recomendação a verificar, nunca certificação de conformidade.
+- Gera recomendações de acessibilidade fundamentadas em WCAG 2.2 — sempre como recomendação a verificar, nunca certificação de conformidade.
 - Avalia os fluxos via revisão heurística (10 Heurísticas de Nielsen) — nunca chamada de "teste de usabilidade", já que o agente não tem acesso a usuários reais.
 - Roda um ciclo de refinamento humano-no-loop quando a revisão reprova.
 - Exporta o resultado em Markdown e, opcionalmente, publica como página irmã do PRD no Confluence.
@@ -50,6 +50,6 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 
 ## Status detalhado
 
-`docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) e `docs/standards/` estão completos. `knowledge/methodology/` tem os três documentos reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.1, princípios de Arquitetura da Informação) — nenhum critério foi inventado à parte deles. `knowledge/templates/ux_specification.md` define o formato de exportação.
+`docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) e `docs/standards/` estão completos. `knowledge/methodology/` tem os cinco documentos reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério foi inventado à parte deles. `knowledge/templates/ux_specification.md` define o formato de exportação (12 seções, incluindo referências ao PRD e placeholders explícitos de fase futura).
 
 Ainda não implementado: `src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), `tests/`. Ver `WHITEPAPER.md`, seção 12, para os próximos passos de implementação.

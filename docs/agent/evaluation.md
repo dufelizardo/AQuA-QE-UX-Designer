@@ -7,7 +7,7 @@
 - **Taxa de aprovação automática** — % de UX Specifications geradas que passam no checklist (`validation_checklist.md`) sem interrupção por ambiguidade.
 - **Taxa de aceitação sem retrabalho** — % de UX Specifications em `draft_validated` aceitas pelo designer/PO sem edição substancial (métrica de sucesso do PRD).
 - **Cobertura de rastreabilidade** — % de passos de fluxo com `source_reference` preenchido a partir da fonte real, não vazio.
-- **Taxa de recomendações de acessibilidade fundamentadas** — % de recomendações que citam um critério WCAG 2.1 específico, não genérico.
+- **Taxa de recomendações de acessibilidade fundamentadas** — % de recomendações que citam um critério WCAG 2.2 específico, não genérico.
 
 ## Casos de teste
 

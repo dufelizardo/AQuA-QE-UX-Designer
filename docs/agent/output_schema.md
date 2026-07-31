@@ -22,7 +22,7 @@
     "source_reference": "<trecho da fonte>"
   },
   "accessibility_recommendations": [
-    "<recomendação fundamentada em WCAG 2.1, sempre como 'a verificar', nunca certificação — GR-UX-2>"
+    "<recomendação fundamentada em WCAG 2.2, sempre como 'a verificar', nunca certificação — GR-UX-2>"
   ],
   "source_reference": "<texto de origem completo (Story/Epic + contexto do PRD), para rastreabilidade — GR-UX-1>",
   "status": "draft_validated | pending_clarification | accepted",

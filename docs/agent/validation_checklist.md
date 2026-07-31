@@ -16,7 +16,7 @@
 
 - [ ] `information_architecture.sections` não está vazio.
 
-## 4. Acessibilidade (WCAG 2.1, `../../knowledge/methodology/wcag.md`)
+## 4. Acessibilidade (WCAG 2.2, `../../knowledge/methodology/wcag.md`)
 
 - [ ] Há ao menos uma recomendação de acessibilidade.
 - [ ] Nenhuma recomendação usa linguagem de certificação ("está em conformidade") — sempre "recomenda-se verificar" (GR-UX-2).
