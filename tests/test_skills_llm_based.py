@@ -194,6 +194,32 @@ def test_review_ux_specification_uses_review_model_and_maps_result(monkeypatch):
     assert captured["model"] == "phi4"
 
 
+def test_review_ux_specification_converte_problema_objeto_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (phi4) às vezes devolve cada problema apontado como
+    {"heuristica_de_nielsen": ..., "detalhes": ..., "recomendacao": ...} em vez de string simples."""
+    monkeypatch.setattr(
+        review_ux_specification_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "aprovado": False,
+            "problemas": [
+                {
+                    "heuristica_de_nielsen": "Visibilidade do status do sistema",
+                    "detalhes": "o fluxo não informa o usuário após cada etapa",
+                    "recomendacao": "implementar feedback imediato",
+                }
+            ],
+        },
+    )
+
+    resultado = review_ux_specification_module.review_ux_specification(_spec())
+
+    assert resultado["problemas"] == [
+        "Visibilidade do status do sistema — o fluxo não informa o usuário após cada etapa "
+        "— implementar feedback imediato"
+    ]
+
+
 def test_generate_ux_clarifying_questions_returns_empty_without_review_notes():
     assert (
         generate_ux_clarifying_questions_module.generate_ux_clarifying_questions(_spec()) == []
