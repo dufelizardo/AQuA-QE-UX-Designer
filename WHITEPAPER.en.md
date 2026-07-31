@@ -6,7 +6,7 @@ AQuA-QE UX Designer is the platform's fourth agent, specialized in translating a
 
 This document describes Phase 1 of the agent — deliberately leaner than a human UX Designer's full specialty set, because half of what would look like exclusive UX specialties (Personas, User Journey) are already the Product Manager's responsibility, and another part (Wireframes, Prototypes, Design System) requires an integration (Figma) the platform doesn't have yet — reserved for a future sibling agent, AQuA-QE UI Designer.
 
-**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/`) has not started yet.
+**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/` — 63 tests, 99% coverage) is done (Phase 1/MVP).
 
 ## 2. Methodological grounding
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 A sequentially orchestrated pipeline of skills, with two checkpoints before any output is considered valid: automatic validation (structural checklist, pure Python) and mandatory human review. See `docs/agent/system_design.md` for the full data flow.
 
-## 5. The 13 skills (planned)
+## 5. The 13 skills
 
 Skills with no LLM (pure Python, deterministic):
 
@@ -97,7 +97,7 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 
 ## 10. Quality and test coverage
 
-Not yet implemented — once implementation begins, it will follow the same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
+63 tests, 99% coverage — same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
 
 ## 11. What's still missing (deliberately deferred, not forgotten)
 
@@ -110,7 +110,13 @@ Not yet implemented — once implementation begins, it will follow the same patt
 
 ## 12. How to run
 
-Not yet applicable — see "Detailed status" in `README.md`/`README.pt.md` for what already exists (complete formal spec) and what's missing (implementation of `src/`, `run.py`, `tests/`). Once implementation begins, it will follow the same sequence as the sibling agents: models → skills → workflow → orchestrator → `run.py`, with tests from the start.
+```bash
+uv sync
+uv run pytest
+uv run python run.py --jira AQUAQE-10 --confluence <prd-url> --saida ux-spec.md
+```
+
+See `README.md`/`README.pt.md` for full setup (Ollama, `.env`) and `run.py --help` for all options (`--refinar`, `--publicar-confluence`).
 
 ## 13. Conclusion
 

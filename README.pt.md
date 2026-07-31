@@ -2,7 +2,7 @@
 
 Agente que gera **UX Specifications** — fluxos de navegação por tarefa, arquitetura da informação e recomendações de acessibilidade — a partir de uma Story/Epic já pronta do [AQuA-QE Product Owner](https://github.com/dufelizardo/AQuA-QE-Product-Owner) e do PRD associado do [AQuA-QE Product Manager](https://github.com/dufelizardo/AQuA-QE-Product-Manager). Com rastreabilidade obrigatória à fonte, validação automática e revisão humana no centro do ciclo. Ver `WHITEPAPER.md` para a visão completa.
 
-**Status**: repositório recém-criado — a spec formal (`docs/agent/`) está completa, mas **nenhuma linha de código-fonte foi implementada ainda**. Este README descreve o que o agente **vai** fazer quando a implementação começar, seguindo o mesmo padrão gerar→validar→revisar→aceite humano já usado nos três agentes irmãos.
+**Status**: Fase 1 (MVP) implementada, seguindo o mesmo padrão gerar→validar→revisar→aceite humano já usado nos três agentes irmãos.
 
 Este projeto tem repositório git próprio, independente do monorepo raiz (conforme a convenção "todo projeto novo recebe repositório separado" — ver `CLAUDE.md` raiz do workspace).
 
@@ -25,11 +25,11 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 
 ## Arquitetura (resumo — detalhe completo em `docs/agent/system_design.md`)
 
-- **`src/aqua_qe_ux_designer/models/`** (planejado) — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`.
-- **`src/aqua_qe_ux_designer/skills/`** (planejado) — 13 funções de responsabilidade única (ver `docs/agent/skills.md`).
-- **`src/aqua_qe_ux_designer/workflow/`** (planejado) — orquestração da sequência de skills.
-- **`src/aqua_qe_ux_designer/orchestrator/`** (planejado) — ponto de entrada único (`handle_request`).
-- **`src/aqua_qe_ux_designer/services/`** (planejado) — `llm_service` (Ollama por padrão, sem piloto de provedor em nuvem nesta fase), `jira_service` (apenas leitura), `confluence_service` (leitura + escrita gated, reaproveitado do Solution Architect).
+- **`src/aqua_qe_ux_designer/models/`** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`.
+- **`src/aqua_qe_ux_designer/skills/`** — 13 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- **`src/aqua_qe_ux_designer/workflow/`** — orquestração da sequência de skills.
+- **`src/aqua_qe_ux_designer/orchestrator/`** — ponto de entrada único (`handle_request`).
+- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama por padrão, sem piloto de provedor em nuvem nesta fase), `jira_service` (apenas leitura), `confluence_service` (leitura + escrita gated, reaproveitado do Solution Architect).
 
 ## Configuração
 
@@ -43,7 +43,7 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
    ```bash
    uv sync
    ```
-4. Copie `.env.example` para `.env` e preencha os valores necessários (o Ollama funciona com os padrões; as credenciais de Jira/Confluence só são necessárias quando a implementação e os comandos reais existirem):
+4. Copie `.env.example` para `.env` e preencha os valores necessários (o Ollama funciona com os padrões; credenciais de Jira/Confluence são necessárias para `--jira`/`--confluence`/`--publicar-confluence`):
    ```bash
    cp .env.example .env
    ```
@@ -52,4 +52,4 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) e `docs/standards/` estão completos. `knowledge/methodology/` tem os cinco documentos reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério foi inventado à parte deles. `knowledge/templates/ux_specification.md` define o formato de exportação (12 seções, incluindo referências ao PRD e placeholders explícitos de fase futura).
 
-Ainda não implementado: `src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), `tests/`. Ver `WHITEPAPER.md`, seção 12, para os próximos passos de implementação.
+`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI) e `tests/` (63 testes, 99% cobertura) estão implementados. Ver `WHITEPAPER.md`, seção 11, para o que segue deliberadamente fora desta fase.

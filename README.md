@@ -2,7 +2,7 @@
 
 An agent that generates **UX Specifications** — task-level navigation flows, information architecture, and accessibility recommendations — from an already-finished Story/Epic from the [AQuA-QE Product Owner](https://github.com/dufelizardo/AQuA-QE-Product-Owner) and the associated PRD from the [AQuA-QE Product Manager](https://github.com/dufelizardo/AQuA-QE-Product-Manager). With mandatory traceability to source, automatic validation, and human review at the center of the cycle. See `WHITEPAPER.en.md` for the full picture.
 
-**Status**: freshly created repository — the formal spec (`docs/agent/`) is complete, but **no source code has been implemented yet**. This README describes what the agent **will** do once implementation begins, following the same generate→validate→review→human-accept pattern already used by the three sibling agents.
+**Status**: Phase 1 (MVP) implemented, following the same generate→validate→review→human-accept pattern already used by the three sibling agents.
 
 This project has its own git repository, independent from the root monorepo (per the "every new project gets its own repository" convention — see the root `CLAUDE.md`).
 
@@ -25,11 +25,11 @@ This project has its own git repository, independent from the root monorepo (per
 
 ## Architecture (summary — full detail in `docs/agent/system_design.md`)
 
-- **`src/aqua_qe_ux_designer/models/`** (planned) — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ArtifactStatus` enum.
-- **`src/aqua_qe_ux_designer/skills/`** (planned) — 13 single-responsibility functions (see `docs/agent/skills.md`).
-- **`src/aqua_qe_ux_designer/workflow/`** (planned) — orchestrates the skill sequence.
-- **`src/aqua_qe_ux_designer/orchestrator/`** (planned) — single entry point (`handle_request`).
-- **`src/aqua_qe_ux_designer/services/`** (planned) — `llm_service` (Ollama by default, no cloud provider pilot at this phase), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect).
+- **`src/aqua_qe_ux_designer/models/`** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ArtifactStatus` enum.
+- **`src/aqua_qe_ux_designer/skills/`** — 13 single-responsibility functions (see `docs/agent/skills.md`).
+- **`src/aqua_qe_ux_designer/workflow/`** — orchestrates the skill sequence.
+- **`src/aqua_qe_ux_designer/orchestrator/`** — single entry point (`handle_request`).
+- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama by default, no cloud provider pilot at this phase), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect).
 
 ## Setup
 
@@ -43,7 +43,7 @@ This project has its own git repository, independent from the root monorepo (per
    ```bash
    uv sync
    ```
-4. Copy `.env.example` to `.env` and fill in the values you need (Ollama works with the defaults; Jira/Confluence credentials will only be needed once real commands exist):
+4. Copy `.env.example` to `.env` and fill in the values you need (Ollama works with the defaults; Jira/Confluence credentials are needed for `--jira`/`--confluence`/`--publicar-confluence`):
    ```bash
    cp .env.example .env
    ```
@@ -52,4 +52,4 @@ This project has its own git repository, independent from the root monorepo (per
 
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) and `docs/standards/` are complete. `knowledge/methodology/` has the five real documents grounding the quality criteria (Nielsen's 10 Heuristics, WCAG 2.2, Information Architecture principles, ISO 9241-210, Laws of UX) — no criterion was invented apart from them. `knowledge/templates/ux_specification.md` defines the export format (12 sections, including PRD references and explicit future-phase placeholders).
 
-Not yet implemented: `src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), `tests/`. See `WHITEPAPER.en.md`, section 12, for the next implementation steps.
+`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), and `tests/` (63 tests, 99% coverage) are implemented. See `WHITEPAPER.en.md`, section 11, for what's deliberately left out of this phase.

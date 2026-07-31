@@ -1,0 +1,27 @@
+from ..models import UserFlow
+from ..services.llm_service import complete_json
+
+_SYSTEM = (
+    "Você identifica o fluxo de navegação concreto (sequência de passos/telas) necessário "
+    "para completar a tarefa descrita em uma User Story, sempre rastreável ao texto de "
+    "origem — nunca invente um passo sem base real na Story (GR-UX-1). Organize os passos "
+    "considerando a Lei de Hick (menos opções por tela facilitam a decisão) e a Lei de Jakob "
+    "(siga padrões de navegação já conhecidos do usuário), nunca como justificativa para "
+    "adicionar um passo sem lastro na Story. Se a Story não tiver informação suficiente para "
+    "um fluxo completo, retorne poucos passos em vez de inventar o restante."
+)
+
+
+def identify_user_flows(texto_story: str, contexto: dict) -> UserFlow:
+    """Identifica o fluxo de navegação concreto para a tarefa da Story, rastreável à fonte (GR-UX-1)."""
+    prompt = (
+        f"Contexto: {contexto.get('context_problem', '')}\n"
+        f"Story:\n{texto_story}\n\n"
+        'Responda apenas em JSON: {"nome": "...", "passos": ["..."], "trecho_fonte": "..."}'
+    )
+    dados = complete_json(prompt, system=_SYSTEM)
+    return UserFlow(
+        name=dados.get("nome", ""),
+        steps=dados.get("passos", []),
+        source_reference=dados.get("trecho_fonte", ""),
+    )

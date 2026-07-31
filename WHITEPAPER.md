@@ -6,7 +6,7 @@ O AQuA-QE UX Designer é o quarto agente da plataforma AQuA-QE, especializado em
 
 Este documento descreve a Fase 1 do agente — deliberadamente mais enxuta do que a especialidade completa de um UX Designer humano, porque metade do que pareceriam especialidades exclusivas (Personas, User Journey) já são responsabilidade do Product Manager, e outra parte (Wireframes, Protótipos, Design System) exige uma integração (Figma) que a plataforma ainda não tem — reservada para um futuro agente irmão, o AQuA-QE UI Designer.
 
-**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/`) ainda não começou.
+**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/` — 63 testes, 99% cobertura) está pronta (Fase 1/MVP).
 
 ## 2. Fundamentação metodológica
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 Um pipeline de skills orquestrado sequencialmente, com dois pontos de checagem antes de qualquer saída ser considerada válida: validação automática (checklist estrutural, Python puro) e revisão humana obrigatória. Ver `docs/agent/system_design.md` para o fluxo de dados completo.
 
-## 5. As 13 skills (planejadas)
+## 5. As 13 skills
 
 Skills sem LLM (Python puro, determinística):
 
@@ -97,7 +97,7 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 
 ## 10. Qualidade e cobertura de testes
 
-Ainda não implementado — quando a implementação começar, seguirá o mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
+63 testes, 99% de cobertura — mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
 
 ## 11. O que ainda falta (deliberadamente adiado, não esquecido)
 
@@ -110,7 +110,13 @@ Ainda não implementado — quando a implementação começar, seguirá o mesmo 
 
 ## 12. Como executar
 
-Ainda não aplicável — ver "Status detalhado" em `README.md`/`README.pt.md` para o que já existe (spec formal completa) e o que falta (implementação de `src/`, `run.py`, `tests/`). Quando a implementação começar, seguirá a mesma sequência das dos agentes irmãos: models → skills → workflow → orchestrator → `run.py`, com testes desde o início.
+```bash
+uv sync
+uv run pytest
+uv run python run.py --jira AQUAQE-10 --confluence <url-do-prd> --saida ux-spec.md
+```
+
+Ver `README.md`/`README.pt.md` para o setup completo (Ollama, `.env`) e `run.py --help` para todas as opções (`--refinar`, `--publicar-confluence`).
 
 ## 13. Conclusão
 

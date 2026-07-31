@@ -8,9 +8,9 @@ Agente que gera UX Specifications (fluxos de navegação por tarefa, arquitetura
 
 Este é um **repositório standalone**, próprio, independente de qualquer monorepo — não assuma dependências herdadas de um workspace pai.
 
-**Status atual**: repositório recém-criado (spec formal em `docs/agent/` completa; nenhuma linha de código-fonte implementada ainda — `src/` só tem o stub `__init__.py` do template). Os comandos abaixo refletem o que **vai** existir quando a implementação começar, não o estado atual.
+**Status atual**: Fase 1 (MVP) implementada — `src/` tem models/skills/workflow/orchestrator/services completos, `run.py` funcional, `tests/` com 63 testes (99% cobertura, tudo mockado).
 
-## Comandos essenciais (quando implementado)
+## Comandos essenciais
 
 ```bash
 # Instalar/sincronizar dependências
@@ -39,11 +39,11 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
   → CLI (run.py) → orchestrator/ux_designer.py → workflow/generate_ux_specification.py → skills/* → models/* → services/*
 ```
 
-- `src/aqua_qe_ux_designer/models/` (planejado) — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ChatMessage`, enum `ArtifactStatus`.
-- `src/aqua_qe_ux_designer/skills/` (planejado) — 13 funções de responsabilidade única (ver `docs/agent/skills.md`).
-- `src/aqua_qe_ux_designer/workflow/generate_ux_specification.py` (planejado) — `generate_ux_specification`, `finalize_ux_specification` (validate→review), `refine_and_finalize_ux_specification`.
-- `src/aqua_qe_ux_designer/orchestrator/ux_designer.py` (planejado) — ponto de entrada único, `handle_request(entrada)`.
-- `src/aqua_qe_ux_designer/services/` (planejado) — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado do Solution Architect).
+- `src/aqua_qe_ux_designer/models/` — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`. Sem `ChatMessage` — este agente não tem skill de chat (`agent_manifest.yaml` só lista `confluence`/`jira` como inputs).
+- `src/aqua_qe_ux_designer/skills/` — 13 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- `src/aqua_qe_ux_designer/workflow/generate_ux_specification.py` — `generate_ux_specification`, `finalize_ux_specification` (validate→review), `refine_and_finalize_ux_specification`.
+- `src/aqua_qe_ux_designer/orchestrator/ux_designer.py` — ponto de entrada único, `handle_request(texto_prd, texto_ticket)`.
+- `src/aqua_qe_ux_designer/services/` — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado verbatim do Solution Architect).
 
 ## Convenções críticas
 
