@@ -70,6 +70,27 @@ def test_identify_user_flows_defaults_to_empty_steps(monkeypatch):
     assert fluxo.steps == []
 
 
+def test_identify_user_flows_converte_passo_objeto_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve cada passo como
+    {"passo": ..., "trecho_fonte": ...} em vez de uma string simples."""
+    monkeypatch.setattr(
+        identify_user_flows_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "nome": "Agendamento",
+            "passos": [
+                {"trecho_fonte": "trecho x", "passo": "abrir tela de agendamento"},
+                {"trecho_fonte": "trecho y", "passo": "confirmar horário"},
+            ],
+            "trecho_fonte": "trecho 1",
+        },
+    )
+
+    fluxo = identify_user_flows_module.identify_user_flows("story", {})
+
+    assert fluxo.steps == ["abrir tela de agendamento", "confirmar horário"]
+
+
 def test_design_information_architecture_maps_json_to_model(monkeypatch):
     monkeypatch.setattr(
         design_information_architecture_module,
@@ -90,6 +111,30 @@ def test_design_information_architecture_maps_json_to_model(monkeypatch):
     assert ia.source_reference == "trecho 1"
 
 
+def test_design_information_architecture_converte_secao_objeto_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve cada seção como
+    {"nome": ..., "descricao": ...} em vez de uma string simples."""
+    monkeypatch.setattr(
+        design_information_architecture_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "secoes": [
+                {
+                    "nome": "Agendamento Assistido",
+                    "descricao": "Funcionalidade para quem não usa o app",
+                    "subsecoes": [{"nome": "Regras de Negócio"}],
+                }
+            ],
+            "notas_navegacao": "n",
+            "trecho_fonte": "f",
+        },
+    )
+
+    ia = design_information_architecture_module.design_information_architecture("epic", {})
+
+    assert ia.sections == ["Agendamento Assistido: Funcionalidade para quem não usa o app"]
+
+
 def test_review_accessibility_maps_json_to_list(monkeypatch):
     monkeypatch.setattr(
         review_accessibility_module,
@@ -105,6 +150,33 @@ def test_review_accessibility_maps_json_to_list(monkeypatch):
     resultado = review_accessibility_module.review_accessibility(fluxo, ia)
 
     assert resultado == ["verificar contraste (WCAG 1.4.3)"]
+
+
+def test_review_accessibility_converte_recomendacao_objeto_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve cada recomendação como
+    {"passo": ..., "criterio_wcag": ..., "acao": ...} em vez de uma string simples."""
+    monkeypatch.setattr(
+        review_accessibility_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "recomendacoes": [
+                {
+                    "passo": "O cliente confirma o agendamento",
+                    "criterio_wcag": "2.4.3 Ordem de Foco",
+                    "acao": "verificar se a ordem de tabulação segue a sequência lógica",
+                }
+            ]
+        },
+    )
+
+    fluxo = UserFlow(name="f", steps=["a", "b"], source_reference="x")
+    ia = InformationArchitecture(sections=["Home"])
+
+    resultado = review_accessibility_module.review_accessibility(fluxo, ia)
+
+    assert resultado == [
+        "2.4.3 Ordem de Foco: verificar se a ordem de tabulação segue a sequência lógica"
+    ]
 
 
 def test_review_ux_specification_uses_review_model_and_maps_result(monkeypatch):

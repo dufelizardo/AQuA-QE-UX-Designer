@@ -8,8 +8,16 @@ _SYSTEM = (
     "considerando a Lei de Hick (menos opções por tela facilitam a decisão) e a Lei de Jakob "
     "(siga padrões de navegação já conhecidos do usuário), nunca como justificativa para "
     "adicionar um passo sem lastro na Story. Se a Story não tiver informação suficiente para "
-    "um fluxo completo, retorne poucos passos em vez de inventar o restante."
+    "um fluxo completo, retorne poucos passos em vez de inventar o restante. Cada passo deve "
+    "ser uma única string de texto, nunca um objeto/dicionário com campos separados."
 )
+
+
+def _passo_para_string(item) -> str:
+    """Defesa contra o LLM devolver um objeto em vez de string para um passo (ex.: {"passo": ..., "trecho_fonte": ...})."""
+    if isinstance(item, dict):
+        return item.get("passo") or item.get("nome") or str(item)
+    return str(item)
 
 
 def identify_user_flows(texto_story: str, contexto: dict) -> UserFlow:
@@ -22,6 +30,6 @@ def identify_user_flows(texto_story: str, contexto: dict) -> UserFlow:
     dados = complete_json(prompt, system=_SYSTEM)
     return UserFlow(
         name=dados.get("nome", ""),
-        steps=dados.get("passos", []),
+        steps=[_passo_para_string(item) for item in dados.get("passos", [])],
         source_reference=dados.get("trecho_fonte", ""),
     )

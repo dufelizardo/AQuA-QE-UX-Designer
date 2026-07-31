@@ -6,8 +6,21 @@ _SYSTEM = (
     "navegação e uma arquitetura da informação. Cada recomendação deve citar um critério "
     "WCAG 2.2 específico (ex.: '2.4.3 Ordem de Foco') e ser sempre redigida como algo 'a "
     "verificar' pela equipe de desenvolvimento — nunca como afirmação de conformidade "
-    "(GR-UX-2). Nunca certifique que algo 'está em conformidade'."
+    "(GR-UX-2). Nunca certifique que algo 'está em conformidade'. Cada recomendação deve ser "
+    "uma única string de texto (ex.: '2.4.3 Ordem de Foco: verificar se a ordem de tabulação "
+    "segue a sequência lógica da tela'), nunca um objeto/dicionário com campos separados."
 )
+
+
+def _recomendacao_para_string(item) -> str:
+    """Defesa contra o LLM devolver um objeto em vez de string para uma recomendação (ex.: {"criterio_wcag": ..., "acao": ...})."""
+    if isinstance(item, dict):
+        criterio = item.get("criterio_wcag", "")
+        acao = item.get("acao") or item.get("ação", "")
+        if criterio and acao:
+            return f"{criterio}: {acao}"
+        return acao or criterio or str(item)
+    return str(item)
 
 
 def review_accessibility(
@@ -21,4 +34,4 @@ def review_accessibility(
         'Responda apenas em JSON: {"recomendacoes": ["..."]}'
     )
     dados = complete_json(prompt, system=_SYSTEM)
-    return dados.get("recomendacoes", [])
+    return [_recomendacao_para_string(item) for item in dados.get("recomendacoes", [])]
