@@ -23,16 +23,30 @@ def _referencia_prd_md(referencia: str, rotulo: str) -> str:
     return f"> Não disponível no PRD de origem — nenhuma {rotulo} identificada."
 
 
+_TOPICO_MAX_CARACTERES = 60
+_TOPICO_MAX_PALAVRAS = 6
+
+
 def _regra_usabilidade_md(nota: str) -> str:
-    """Destaca o tópico da observação heurística (antes do primeiro ' — '), quando houver."""
+    """Destaca o tópico da observação heurística, quando houver um separador reconhecível
+    (' — ' ou ': ') e o trecho antes dele for curto o suficiente para ser um tópico, não uma
+    frase comum que só contém dois-pontos no meio."""
     if " — " in nota:
         topico, resto = nota.split(" — ", 1)
         return f"- **{topico}** — {resto}"
+    if ": " in nota:
+        topico, resto = nota.split(": ", 1)
+        if len(topico) <= _TOPICO_MAX_CARACTERES and len(topico.split()) <= _TOPICO_MAX_PALAVRAS:
+            return f"- **{topico}**: {resto}"
     return f"- {nota}"
 
 
 def _regras_usabilidade_md(notas: list[str]) -> str:
     return "\n".join(_regra_usabilidade_md(nota) for nota in notas) if notas else "(nenhuma)"
+
+
+def _pluralizar_item(quantidade: int) -> str:
+    return f"{quantidade} item" if quantidade == 1 else f"{quantidade} itens"
 
 
 def _rastreabilidade_md(spec: UXSpecification) -> str:
@@ -63,8 +77,9 @@ def format_ux_specification_markdown(spec: UXSpecification) -> str:
         f"- **PRD de origem**: {spec.prd_reference or '(não informado)'}\n"
         f"- **Story/Epic de origem**: {spec.ticket_reference or '(não informado)'}\n\n"
         "## 3. Personas\n\n"
-        "> Não gerado por este agente — apenas referência às Personas já existentes no PRD "
-        "de origem (Product Manager).\n\n"
+        "> Não gerado por este agente — as Personas relevantes a esta tarefa devem ser "
+        "extraídas literalmente do PRD de origem (Product Manager) e citadas abaixo, nunca "
+        "criadas por este agente (GR-UX-4).\n\n"
         f"{_referencia_prd_md(spec.personas_reference, 'seção de Personas')}\n\n"
         f"## 4. User Flows\n\n{_fluxos_md(spec)}\n\n"
         "## 5. Information Architecture\n\n"
@@ -72,9 +87,10 @@ def format_ux_specification_markdown(spec: UXSpecification) -> str:
         f"Notas de navegação: {ia.navigation_notes or '(nenhuma)'}\n\n"
         f"## 6. Recomendações de Acessibilidade\n{_lista_md(spec.accessibility_recommendations)}\n\n"
         "## 7. User Journey\n\n"
-        "> Não gerado por este agente — apenas referência à User Journey já existente no PRD "
-        "de origem (Product Manager). Nível de negócio/emocional, diferente dos User Flows "
-        "de navegação concreta da seção 4.\n\n"
+        "> Não gerado por este agente — a User Journey relevante a esta tarefa deve ser "
+        "extraída literalmente do PRD de origem (Product Manager, seção 'Jornadas do "
+        "Usuário') e citada abaixo, nunca criada por este agente (GR-UX-4). Nível de "
+        "negócio/emocional, diferente dos User Flows de navegação concreta da seção 4.\n\n"
         f"{_referencia_prd_md(spec.journey_reference, 'seção de User Journey')}\n\n"
         "## 8. Wireframes\n\n"
         "> Fora de escopo desta fase — gerar wireframes exige integração com uma ferramenta "
@@ -96,7 +112,7 @@ def format_ux_specification_markdown(spec: UXSpecification) -> str:
         "primeiro. Preenchida pelo futuro AQuA-QE UI Designer.\n\n"
         "## 12. Recomendações\n\n"
         f"Antes da implementação, revisar as recomendações de acessibilidade (seção 6, "
-        f"{len(spec.accessibility_recommendations)} item(ns)) e as observações de "
-        f"usabilidade (seção 10, {len(spec.review_notes)} item(ns)) acima.\n\n"
+        f"{_pluralizar_item(len(spec.accessibility_recommendations))}) e as observações de "
+        f"usabilidade (seção 10, {_pluralizar_item(len(spec.review_notes))}) acima.\n\n"
         f"## Rastreabilidade\n\n{_rastreabilidade_md(spec)}\n"
     )

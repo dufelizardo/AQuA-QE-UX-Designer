@@ -55,8 +55,10 @@ def test_format_ux_specification_markdown_includes_all_fields():
     )
     assert "Fora de escopo desta fase" in resultado
     assert "Não gerado por este agente" in resultado
-    assert "revisar as recomendações de acessibilidade (seção 6, 1 item(ns))" in resultado
-    assert "observações de usabilidade (seção 10, 1 item(ns))" in resultado
+    assert "devem ser extraídas literalmente do PRD de origem" in resultado
+    assert "deve ser extraída literalmente do PRD de origem" in resultado
+    assert "revisar as recomendações de acessibilidade (seção 6, 1 item)" in resultado
+    assert "observações de usabilidade (seção 10, 1 item)" in resultado
     assert "| User Flow: Agendamento assistido | trecho 1 |" in resultado
     assert "| Information Architecture | trecho 2 |" in resultado
     assert "| PRD de origem | https://example.atlassian.net/wiki/pages/1179649/PRD |" in resultado
@@ -72,6 +74,41 @@ def test_format_ux_specification_markdown_sem_separador_nao_negrita_topico():
 
     assert "- nota simples sem topico" in resultado
     assert "**nota simples" not in resultado
+
+
+def test_format_ux_specification_markdown_negrita_topico_com_dois_pontos():
+    """Regressão (achado ao vivo): o phi4 às vezes devolve a observação já formatada com
+    ': ' (dois pontos) em vez de ' — ' (travessão) — o destaque em negrito precisa cobrir
+    os dois casos."""
+    spec = UXSpecification(
+        id="UX-005",
+        title="t",
+        context_problem="c",
+        review_notes=[
+            "Consistência e padrões: o fluxo pode quebrar a consistência com outros serviços"
+        ],
+    )
+
+    resultado = format_ux_specification_markdown(spec)
+
+    assert (
+        "- **Consistência e padrões**: o fluxo pode quebrar a consistência com outros serviços"
+        in resultado
+    )
+
+
+def test_format_ux_specification_markdown_nao_negrita_frase_longa_com_dois_pontos():
+    """Uma frase comum com ':' no meio (não um tópico curto) não deve virar negrito por engano."""
+    nota = (
+        "O fluxo de navegação sugere que o usuário deve ser redirecionado para um cadastro: "
+        "isso pode quebrar a consistência com os demais serviços do site"
+    )
+    spec = UXSpecification(id="UX-006", title="t", context_problem="c", review_notes=[nota])
+
+    resultado = format_ux_specification_markdown(spec)
+
+    assert f"- {nota}" in resultado
+    assert "**O fluxo" not in resultado
 
 
 def test_format_ux_specification_markdown_avisa_ausencia_de_personas_e_journey():

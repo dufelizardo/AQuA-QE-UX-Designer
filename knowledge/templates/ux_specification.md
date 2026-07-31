@@ -12,7 +12,7 @@
 
 ## 3. Personas
 
-> **Não gerado por este agente.** Referência direta às Personas já existentes no PRD do Product Manager (`synthesize_personas`) — este documento nunca cria uma Persona nova (GR-UX-4). Se o PRD não tiver Personas, esta seção fica marcada "não disponível no PRD de origem" e o checklist automático (`validate_ux_specification`) reprova a UX Specification até que o ciclo de esclarecimento humano-no-loop informe quem são os usuários.
+> **Não gerado por este agente.** As Personas relevantes à tarefa devem ser extraídas literalmente da seção "Personas" do PRD do Product Manager e citadas aqui — este documento nunca cria uma Persona nova (GR-UX-4). Se o PRD não tiver Personas, esta seção fica marcada "não disponível no PRD de origem" e o checklist automático (`validate_ux_specification`) reprova a UX Specification até que o ciclo de esclarecimento humano-no-loop informe quem são os usuários.
 
 `<trecho de Personas citado literalmente do PRD de origem>`
 
@@ -30,7 +30,7 @@
 
 ## 7. User Journey
 
-> **Não gerado por este agente.** Referência direta à User Journey já existente no PRD do Product Manager (`identify_user_journeys`) — mesma razão da seção 3, inclusive a reprovação automática se ausente. A Journey do PM é de nível de negócio/emocional; os User Flows (seção 4) deste agente são de nível de navegação concreta para a tarefa específica, não um substituto.
+> **Não gerado por este agente.** A User Journey relevante à tarefa deve ser extraída literalmente da seção "Jornadas do Usuário" do PRD do Product Manager (`identify_user_journeys`) e citada aqui — mesma razão da seção 3, inclusive a reprovação automática se ausente. **Nunca confundir com a seção "Casos de Uso"** do PRD — são conceitos diferentes (Jornada é a sequência de passos de uma persona ao longo do tempo; Caso de Uso é uma interação pontual ator/sistema). A Journey do PM é de nível de negócio/emocional; os User Flows (seção 4) deste agente são de nível de navegação concreta para a tarefa específica, não um substituto.
 
 `<trecho de User Journey citado literalmente do PRD de origem>`
 

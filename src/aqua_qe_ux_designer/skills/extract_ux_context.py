@@ -3,12 +3,20 @@ from ..services.llm_service import complete_json
 _SYSTEM = (
     "Você extrai um título curto e um resumo do problema/contexto de uma tarefa a partir de "
     "um PRD e de uma Story/Epic associados. Identifique também, separadamente, se existirem "
-    "no PRD: (1) trechos de Personas relevantes à tarefa, e (2) trechos de User Journey "
-    "relevantes à tarefa — cite-os literalmente, nunca crie uma Persona ou Journey nova "
-    "(essas seções já existem no PRD do Product Manager, GR-UX-4). Se o PRD não tiver uma "
-    "seção de Personas, ou não tiver uma seção de User Journey, responda com string vazia "
-    "para o campo correspondente — nunca invente uma para preencher a lacuna. Baseie-se "
-    "apenas no texto informado; nunca invente contexto que não esteja lá."
+    "no PRD:\n"
+    "(1) trechos da seção **'Personas'** relevantes à tarefa;\n"
+    "(2) trechos da seção **'Jornadas do Usuário'** (User Journey) relevantes à tarefa — a "
+    "jornada é a sequência de passos que uma persona percorre ao longo do tempo para atingir "
+    "um objetivo. **Nunca confunda com a seção 'Casos de Uso'** — Caso de Uso é uma interação "
+    "pontual entre ator e sistema, um conceito diferente de User Journey; se só existir 'Casos "
+    "de Uso' e não existir 'Jornadas do Usuário' no PRD, responda com string vazia para a "
+    "jornada, nunca use o conteúdo de Casos de Uso como substituto.\n\n"
+    "Cite os trechos literalmente, em prosa legível (frases completas ou lista com '- '), "
+    "nunca no formato \"Nome: 'descrição'\" (estilo dicionário serializado). Nunca crie uma "
+    "Persona ou Journey nova (essas seções já existem no PRD do Product Manager, GR-UX-4). Se "
+    "o PRD não tiver a seção correspondente, responda com string vazia — nunca invente uma "
+    "para preencher a lacuna. Baseie-se apenas no texto informado; nunca invente contexto que "
+    "não esteja lá."
 )
 
 
