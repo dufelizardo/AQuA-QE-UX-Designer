@@ -42,9 +42,9 @@
 
 ## extract_ux_context
 
-- **Descrição**: extrai título e contexto do problema/tarefa a partir do PRD + Story/Epic combinados. Reaproveita as seções de Personas/Journeys já presentes no texto do PRD como contexto de leitura — **nunca gera uma Persona ou Journey nova** (GR-UX-4).
+- **Descrição**: extrai título e contexto do problema/tarefa a partir do PRD + Story/Epic combinados. Reaproveita as seções de Personas e de User Journey já presentes no texto do PRD como contexto de leitura, **separadamente** — **nunca gera uma Persona ou Journey nova** (GR-UX-4). Se o PRD não tiver uma das duas seções (ou nenhuma), o campo correspondente volta vazio — isso é sinalizado como lacuna do PRD por `validate_ux_specification`, nunca preenchido por suposição.
 - **Entrada**: `texto_prd: str`, `texto_story_ou_epic: str`.
-- **Saída**: `dict` (`title`, `context_problem`, mais o texto de Personas/Journeys já existente, passado adiante como contexto).
+- **Saída**: `dict` (`title`, `context_problem`, `personas_reference`, `journey_reference` — os dois últimos vazios se ausentes no PRD).
 - **Efeitos colaterais**: chamada ao LLM gerador.
 - **Erros esperados**: resposta do LLM não é JSON válido.
 - **Dependências**: consome a saída de `read_confluence_page`/`read_jira_issue`.
@@ -78,7 +78,7 @@
 
 ## validate_ux_specification
 
-- **Descrição**: valida a UX Specification contra o checklist automático (`validation_checklist.md`) e retorna os motivos específicos de reprovação — mesmo contrato `list[str]` já corrigido nos agentes irmãos (nunca `bool` sem motivo).
+- **Descrição**: valida a UX Specification contra o checklist automático (`validation_checklist.md`) e retorna os motivos específicos de reprovação — mesmo contrato `list[str]` já corrigido nos agentes irmãos (nunca `bool` sem motivo). Inclui checar `personas_reference`/`journey_reference` (separadamente): se o PRD de origem não tinha uma dessas seções, a UX Specification reprova até o ciclo de esclarecimento humano-no-loop suprir a lacuna.
 - **Entrada**: `spec: UXSpecification`.
 - **Saída**: `list[str]` — motivos de reprovação, acumulando todos; lista vazia = aprovado no checklist.
 - **Efeitos colaterais**: nenhum — Python puro, sem LLM.
@@ -114,7 +114,7 @@
 
 ## format_ux_specification_markdown
 
-- **Descrição**: exporta a UX Specification em Markdown, seguindo as 12 seções de `../../knowledge/templates/ux_specification.md`. Preenche as seções geradas por este agente (Objetivo, Escopo, User Flows, Information Architecture, Acessibilidade, Regras de Usabilidade, Recomendações); as seções de Personas/User Journey ficam como referência ao PRD de origem, e Wireframes/Protótipos/Design System ficam marcados como fora de escopo desta fase — nunca preenchidos com conteúdo gerado por este agente (GR-UX-4).
+- **Descrição**: exporta a UX Specification em Markdown, seguindo as 12 seções de `../../knowledge/templates/ux_specification.md`. Preenche as seções geradas por este agente (Objetivo, User Flows, Information Architecture, Acessibilidade, Regras de Usabilidade, Recomendações); Escopo cita `prd_reference`/`ticket_reference` (link/chave, não o texto completo); Personas/User Journey citam `personas_reference`/`journey_reference` extraídos do PRD (ou o aviso de ausência); Wireframes/Protótipos/Design System ficam marcados como fora de escopo desta fase — nunca preenchidos com conteúdo gerado por este agente (GR-UX-4). A seção "Rastreabilidade" final é uma tabela de/para (artefato → trecho de origem), não um dump do texto completo da fonte.
 - **Entrada**: `spec: UXSpecification`.
 - **Saída**: `str`.
 - **Efeitos colaterais**: nenhum — Python puro, sem LLM.

@@ -30,7 +30,8 @@ def test_extract_ux_context_maps_json_to_fields(monkeypatch):
         lambda prompt, system="", model=None: {
             "titulo": "Agendamento de Consulta",
             "contexto": "contexto extraido",
-            "personas_journeys": "Persona: Paciente idoso",
+            "personas": "Persona: Paciente idoso",
+            "jornada_usuario": "Jornada: agenda consulta online",
         },
     )
 
@@ -38,7 +39,23 @@ def test_extract_ux_context_maps_json_to_fields(monkeypatch):
 
     assert contexto["title"] == "Agendamento de Consulta"
     assert contexto["context_problem"] == "contexto extraido"
-    assert contexto["personas_journeys"] == "Persona: Paciente idoso"
+    assert contexto["personas_reference"] == "Persona: Paciente idoso"
+    assert contexto["journey_reference"] == "Jornada: agenda consulta online"
+
+
+def test_extract_ux_context_defaults_personas_journey_to_empty_when_absent(monkeypatch):
+    """GR-UX-4: se o PRD não tiver Personas/Journey, os campos voltam vazios (lacuna sinalizada
+    por validate_ux_specification), nunca preenchidos por suposição."""
+    monkeypatch.setattr(
+        extract_ux_context_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {"titulo": "t", "contexto": "c"},
+    )
+
+    contexto = extract_ux_context_module.extract_ux_context("prd", "story")
+
+    assert contexto["personas_reference"] == ""
+    assert contexto["journey_reference"] == ""
 
 
 def test_identify_user_flows_maps_json_to_userflow(monkeypatch):
@@ -133,6 +150,36 @@ def test_design_information_architecture_converte_secao_objeto_em_string(monkeyp
     ia = design_information_architecture_module.design_information_architecture("epic", {})
 
     assert ia.sections == ["Agendamento Assistido: Funcionalidade para quem não usa o app"]
+
+
+def test_design_information_architecture_remove_marcador_de_lista_embutido(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve seções com marcador de
+    lista Markdown embutido no próprio texto (ex.: "- Regras de Negócio")."""
+    monkeypatch.setattr(
+        design_information_architecture_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "secoes": ["- Agendamentos", "* Confirmação de Consulta"],
+            "notas_navegacao": "n",
+            "trecho_fonte": "f",
+        },
+    )
+
+    ia = design_information_architecture_module.design_information_architecture("epic", {})
+
+    assert ia.sections == ["Agendamentos", "Confirmação de Consulta"]
+
+
+def test_design_information_architecture_descarta_secoes_vazias(monkeypatch):
+    monkeypatch.setattr(
+        design_information_architecture_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {"secoes": ["Agendamentos", "", "   "]},
+    )
+
+    ia = design_information_architecture_module.design_information_architecture("epic", {})
+
+    assert ia.sections == ["Agendamentos"]
 
 
 def test_review_accessibility_maps_json_to_list(monkeypatch):
@@ -250,6 +297,8 @@ def test_refine_ux_specification_rewrites_fields_from_answers(monkeypatch):
             "secoes_ia": ["Início"],
             "notas_navegacao": "nota",
             "acessibilidade": ["verificar foco"],
+            "personas": "Persona: Cidadão idoso",
+            "jornada_usuario": "Jornada: liga para agendar",
         },
     )
 
@@ -263,6 +312,8 @@ def test_refine_ux_specification_rewrites_fields_from_answers(monkeypatch):
     assert resultado.user_flows[0].steps == ["passo 1", "passo 2"]
     assert resultado.information_architecture.sections == ["Início"]
     assert resultado.accessibility_recommendations == ["verificar foco"]
+    assert resultado.personas_reference == "Persona: Cidadão idoso"
+    assert resultado.journey_reference == "Jornada: liga para agendar"
 
 
 def test_refine_ux_specification_preserva_campos_sem_resposta_relacionada(monkeypatch):
@@ -277,6 +328,8 @@ def test_refine_ux_specification_preserva_campos_sem_resposta_relacionada(monkey
         title="titulo antigo",
         user_flows=[UserFlow(name="Agendamento", steps=["passo 1"], source_reference="f")],
         information_architecture=InformationArchitecture(sections=["Início"]),
+        personas_reference="Persona: Cidadão",
+        journey_reference="Jornada: agenda consulta",
     )
 
     resultado = refine_ux_specification_module.refine_ux_specification(spec, [])
@@ -284,3 +337,39 @@ def test_refine_ux_specification_preserva_campos_sem_resposta_relacionada(monkey
     assert resultado.title == "novo titulo"
     assert resultado.user_flows[0].name == "Agendamento"
     assert resultado.information_architecture.sections == ["Início"]
+    assert resultado.personas_reference == "Persona: Cidadão"
+    assert resultado.journey_reference == "Jornada: agenda consulta"
+
+
+def test_refine_ux_specification_preenche_personas_journey_ausentes_via_resposta_humana(
+    monkeypatch,
+):
+    """Caso real de uso do ciclo de esclarecimento: o PRD não tinha Personas/Journey,
+    validate_ux_specification reprovou, e a resposta humana às perguntas geradas por
+    generate_ux_clarifying_questions supre a lacuna — sem que o LLM invente além disso."""
+    monkeypatch.setattr(
+        refine_ux_specification_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "personas": "Cidadãos que não usam o aplicativo, atendidos presencialmente",
+            "jornada_usuario": "Cidadão vai à unidade, agente registra o agendamento em seu nome",
+        },
+    )
+
+    spec = _spec(personas_reference="", journey_reference="")
+    resultado = refine_ux_specification_module.refine_ux_specification(
+        spec,
+        [
+            {
+                "pergunta": "Personas não identificadas no PRD — quem são os usuários?",
+                "resposta": "Cidadãos que não usam o aplicativo, atendidos presencialmente",
+            },
+            {
+                "pergunta": "User Journey não identificada no PRD — qual a jornada?",
+                "resposta": "Cidadão vai à unidade, agente registra o agendamento em seu nome",
+            },
+        ],
+    )
+
+    assert resultado.personas_reference == "Cidadãos que não usam o aplicativo, atendidos presencialmente"
+    assert resultado.journey_reference == "Cidadão vai à unidade, agente registra o agendamento em seu nome"

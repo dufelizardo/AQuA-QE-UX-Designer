@@ -8,13 +8,13 @@
 
 ## 2. Escopo
 
-`<o Épico/Story cobertos por esta UX Specification, com link/referência ao ticket de origem>`
+`<link/ID da página Confluence do PRD de origem + chave do ticket Jira (Epic/Story) de origem — não um resumo do texto completo, só a referência>`
 
 ## 3. Personas
 
-> **Não gerado por este agente.** Referência direta às Personas já existentes no PRD do Product Manager (`synthesize_personas`) — este documento nunca cria uma Persona nova (GR-UX-4). Se o PRD não tiver Personas, esta seção fica marcada "não disponível no PRD de origem", nunca preenchida por suposição.
+> **Não gerado por este agente.** Referência direta às Personas já existentes no PRD do Product Manager (`synthesize_personas`) — este documento nunca cria uma Persona nova (GR-UX-4). Se o PRD não tiver Personas, esta seção fica marcada "não disponível no PRD de origem" e o checklist automático (`validate_ux_specification`) reprova a UX Specification até que o ciclo de esclarecimento humano-no-loop informe quem são os usuários.
 
-`<link/citação da seção de Personas do PRD de origem>`
+`<trecho de Personas citado literalmente do PRD de origem>`
 
 ## 4. User Flows
 
@@ -30,21 +30,21 @@
 
 ## 7. User Journey
 
-> **Não gerado por este agente.** Referência direta à User Journey já existente no PRD do Product Manager (`identify_user_journeys`) — mesma razão da seção 3. A Journey do PM é de nível de negócio/emocional; os User Flows (seção 4) deste agente são de nível de navegação concreta para a tarefa específica, não um substituto.
+> **Não gerado por este agente.** Referência direta à User Journey já existente no PRD do Product Manager (`identify_user_journeys`) — mesma razão da seção 3, inclusive a reprovação automática se ausente. A Journey do PM é de nível de negócio/emocional; os User Flows (seção 4) deste agente são de nível de navegação concreta para a tarefa específica, não um substituto.
 
-`<link/citação da seção de User Journey do PRD de origem>`
+`<trecho de User Journey citado literalmente do PRD de origem>`
 
 ## 8. Wireframes
 
-> **Fora de escopo nesta fase.** Responsabilidade planejada do futuro agente irmão AQuA-QE UI Designer (nome definido, escopo ainda não formalizado — ver `WHITEPAPER.md`, seção 11). Quando existir, o link para o(s) wireframe(s) no Figma correspondente(s) a este User Flow apareceria aqui.
+> **Fora de escopo nesta fase.** Gerar wireframes exige integração com uma ferramenta de design visual (Figma), que a plataforma ainda não tem. Esta seção existe para manter a estrutura completa do documento; responsabilidade planejada do futuro agente irmão AQuA-QE UI Designer (nome definido, escopo ainda não formalizado — ver `WHITEPAPER.md`, seção 11). Quando existir, o link para o(s) wireframe(s) no Figma correspondente(s) a este User Flow apareceria aqui.
 
 ## 9. Protótipos
 
-> **Fora de escopo nesta fase**, mesma razão da seção 8.
+> **Fora de escopo nesta fase**, mesma razão da seção 8 — protótipos interativos dependem dos wireframes existirem primeiro.
 
 ## 10. Regras de Usabilidade
 
-`<apontamentos da revisão heurística, fundamentados nas 10 Heurísticas de Nielsen e nas Laws of UX — gerado por review_ux_specification, sempre rotulado como avaliação de especialista, nunca teste com usuário real (GR-UX-3)>`
+`<apontamentos da revisão heurística, fundamentados nas 10 Heurísticas de Nielsen e nas Laws of UX — gerado por review_ux_specification, sempre rotulado como avaliação de especialista, nunca teste com usuário real (GR-UX-3). Cada apontamento é uma string única; quando tem um tópico identificável, o tópico aparece em destaque antes do restante do texto.>`
 
 ## 11. Design System
 
@@ -52,7 +52,11 @@
 
 ## 12. Recomendações
 
-`<síntese das recomendações de acessibilidade (seção 6) e usabilidade (seção 10) para o time de desenvolvimento/design considerar antes da implementação>`
+`<síntese curta apontando para as recomendações de acessibilidade (seção 6) e usabilidade (seção 10) já listadas acima — não repete o conteúdo completo dessas seções, só refere a contagem de itens, para o time de desenvolvimento/design revisar antes da implementação>`
+
+## Rastreabilidade
+
+`<tabela de/para: cada artefato gerado (PRD de origem, Story/Epic de origem, cada User Flow, Information Architecture) ligado ao trecho de origem que o fundamenta — não um dump do texto completo da fonte, ver GR-UX-1>`
 
 ## Relação com a hierarquia de artefatos
 

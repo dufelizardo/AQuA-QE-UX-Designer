@@ -7,11 +7,16 @@ from aqua_qe_ux_designer.models import (
 from aqua_qe_ux_designer.workflow import generate_ux_specification as workflow_module
 
 
-def _stub_geracao(monkeypatch, com_ia_sections=True, com_acessibilidade=True):
+def _stub_geracao(monkeypatch, com_ia_sections=True, com_acessibilidade=True, com_personas=True):
     monkeypatch.setattr(
         workflow_module,
         "extract_ux_context",
-        lambda texto_prd, texto_ticket: {"title": "titulo", "context_problem": "contexto"},
+        lambda texto_prd, texto_ticket: {
+            "title": "titulo",
+            "context_problem": "contexto",
+            "personas_reference": "Persona: Cidadão" if com_personas else "",
+            "journey_reference": "Jornada: agenda consulta" if com_personas else "",
+        },
     )
     monkeypatch.setattr(
         workflow_module,
@@ -42,7 +47,9 @@ def test_generate_ux_specification_happy_path_marks_draft_validated_when_review_
         workflow_module, "review_ux_specification", lambda spec: {"aprovado": True, "problemas": []}
     )
 
-    spec = workflow_module.generate_ux_specification("prd", "ticket")
+    spec = workflow_module.generate_ux_specification(
+        "prd", "ticket", prd_reference="https://example.atlassian.net/wiki/pages/1", ticket_reference="AQUAQE-11"
+    )
 
     assert spec.status == ArtifactStatus.DRAFT_VALIDATED
     assert spec.title == "titulo"
@@ -50,6 +57,29 @@ def test_generate_ux_specification_happy_path_marks_draft_validated_when_review_
     assert spec.information_architecture.sections == ["Início"]
     assert spec.accessibility_recommendations == ["verificar contraste"]
     assert spec.review_notes == []
+    assert spec.prd_reference == "https://example.atlassian.net/wiki/pages/1"
+    assert spec.ticket_reference == "AQUAQE-11"
+    assert spec.personas_reference == "Persona: Cidadão"
+    assert spec.journey_reference == "Jornada: agenda consulta"
+
+
+def test_generate_ux_specification_missing_personas_marks_pending_clarification(monkeypatch):
+    """GR-UX-4: sem Personas/Journey no PRD, reprova até o esclarecimento humano suprir a lacuna."""
+    _stub_geracao(monkeypatch, com_personas=False)
+    chamou_review = {"valor": False}
+
+    def fake_review(spec):
+        chamou_review["valor"] = True
+        return {"aprovado": True, "problemas": []}
+
+    monkeypatch.setattr(workflow_module, "review_ux_specification", fake_review)
+
+    spec = workflow_module.generate_ux_specification("prd", "ticket")
+
+    assert spec.status == ArtifactStatus.PENDING_CLARIFICATION
+    assert chamou_review["valor"] is False
+    assert any("Personas não identificadas" in nota for nota in spec.review_notes)
+    assert any("User Journey não identificada" in nota for nota in spec.review_notes)
 
 
 def test_generate_ux_specification_review_rejection_marks_pending_clarification(monkeypatch):

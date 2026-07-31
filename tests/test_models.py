@@ -25,6 +25,10 @@ def test_ux_specification_defaults_to_pending_clarification():
     assert isinstance(spec.information_architecture, InformationArchitecture)
     assert spec.accessibility_recommendations == []
     assert spec.review_notes == []
+    assert spec.prd_reference == ""
+    assert spec.ticket_reference == ""
+    assert spec.personas_reference == ""
+    assert spec.journey_reference == ""
 
 
 def test_ux_specification_accepts_full_payload():
@@ -36,9 +40,17 @@ def test_ux_specification_accepts_full_payload():
         information_architecture=InformationArchitecture(sections=["Home"], navigation_notes="n"),
         accessibility_recommendations=["verificar contraste"],
         source_reference="fonte completa",
+        prd_reference="https://example.atlassian.net/wiki/pages/1",
+        ticket_reference="AQUAQE-11",
+        personas_reference="Persona: Cidadão",
+        journey_reference="Jornada: agenda consulta",
         status=ArtifactStatus.DRAFT_VALIDATED,
         review_notes=["nota"],
     )
     assert spec.user_flows[0].name == "f"
     assert spec.information_architecture.sections == ["Home"]
     assert spec.status == ArtifactStatus.DRAFT_VALIDATED
+    assert spec.prd_reference == "https://example.atlassian.net/wiki/pages/1"
+    assert spec.ticket_reference == "AQUAQE-11"
+    assert spec.personas_reference == "Persona: Cidadão"
+    assert spec.journey_reference == "Jornada: agenda consulta"

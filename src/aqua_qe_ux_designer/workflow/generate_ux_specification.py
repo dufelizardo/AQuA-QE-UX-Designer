@@ -34,8 +34,18 @@ def refine_and_finalize_ux_specification(
     return finalize_ux_specification(spec_refinada)
 
 
-def generate_ux_specification(texto_prd: str, texto_ticket: str) -> UXSpecification:
-    """Gera a UX Specification a partir do PRD e da Story/Epic de origem, orquestrando a sequência padrão de skills."""
+def generate_ux_specification(
+    texto_prd: str,
+    texto_ticket: str,
+    prd_reference: str = "",
+    ticket_reference: str = "",
+) -> UXSpecification:
+    """Gera a UX Specification a partir do PRD e da Story/Epic de origem, orquestrando a sequência padrão de skills.
+
+    `prd_reference`/`ticket_reference` são a URL/ID do Confluence e a chave do Jira informados
+    pelo usuário (não o texto lido) — usados apenas para a seção 2 (Escopo) do export em
+    Markdown, nunca para leitura.
+    """
     contexto = extract_ux_context(texto_prd, texto_ticket)
     fluxo = identify_user_flows(texto_ticket, contexto)
     arquitetura_informacao = design_information_architecture(texto_ticket, contexto)
@@ -50,5 +60,9 @@ def generate_ux_specification(texto_prd: str, texto_ticket: str) -> UXSpecificat
         information_architecture=arquitetura_informacao,
         accessibility_recommendations=recomendacoes_acessibilidade,
         source_reference=fonte,
+        prd_reference=prd_reference,
+        ticket_reference=ticket_reference,
+        personas_reference=contexto.get("personas_reference", ""),
+        journey_reference=contexto.get("journey_reference", ""),
     )
     return finalize_ux_specification(spec)

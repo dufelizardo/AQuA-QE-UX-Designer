@@ -18,4 +18,14 @@ def validate_ux_specification(spec: UXSpecification) -> list[str]:
         motivos.append("arquitetura da informação sem seções")
     if not spec.accessibility_recommendations:
         motivos.append("nenhuma recomendação de acessibilidade")
+    if not spec.personas_reference:
+        motivos.append(
+            "Personas não identificadas no PRD de origem — "
+            "necessário esclarecer quem são os usuários desta funcionalidade (GR-UX-4)"
+        )
+    if not spec.journey_reference:
+        motivos.append(
+            "User Journey não identificada no PRD de origem — "
+            "necessário esclarecer qual a jornada do usuário para esta tarefa (GR-UX-4)"
+        )
     return motivos

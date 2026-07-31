@@ -18,5 +18,9 @@ class UXSpecification:
     )
     accessibility_recommendations: list[str] = field(default_factory=list)
     source_reference: str = ""
+    prd_reference: str = ""
+    ticket_reference: str = ""
+    personas_reference: str = ""
+    journey_reference: str = ""
     status: ArtifactStatus = ArtifactStatus.PENDING_CLARIFICATION
     review_notes: list[str] = field(default_factory=list)

@@ -92,9 +92,10 @@ def _rodar(
     saida: str | None,
     refinar: bool,
     pagina_origem: str,
+    ticket_reference: str,
     publicar_confluence: bool,
 ) -> None:
-    spec = handle_request(texto_prd, texto_ticket)
+    spec = handle_request(texto_prd, texto_ticket, pagina_origem, ticket_reference)
     _imprimir_spec(spec)
 
     if refinar:
@@ -152,6 +153,7 @@ def main() -> None:
         args.saida,
         args.refinar,
         args.confluence,
+        args.jira,
         args.publicar_confluence,
     )
 

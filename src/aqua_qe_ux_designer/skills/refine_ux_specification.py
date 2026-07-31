@@ -6,10 +6,13 @@ _SYSTEM = (
     "às perguntas de esclarecimento levantadas por um revisor. Baseie-se apenas na UX "
     "Specification atual e nas respostas fornecidas; nunca invente um fluxo, seção de "
     "arquitetura da informação ou recomendação de acessibilidade que não tenha sido "
-    "informado neles — e nunca gere uma Persona ou User Journey nova (GR-UX-4). Nunca "
-    "remova ou resuma um detalhe que já existe em um campo atual, a menos que uma resposta "
-    "contradiga esse detalhe especificamente — preserve o texto existente nos campos que as "
-    "respostas não abordam. Responda sempre em português."
+    "informado neles. Sobre Personas e User Journey (GR-UX-4, campos separados): se o PRD de "
+    "origem não os tinha e uma resposta informou quem são as personas e/ou qual a jornada "
+    "agora, registre exatamente o que a resposta disse no campo correspondente ('personas' "
+    "e/ou 'jornada_usuario') — nunca invente uma Persona ou Journey além do que foi informado "
+    "explicitamente na resposta. Nunca remova ou resuma um detalhe que já existe em um campo "
+    "atual, a menos que uma resposta contradiga esse detalhe especificamente — preserve o "
+    "texto existente nos campos que as respostas não abordam. Responda sempre em português."
 )
 
 
@@ -24,7 +27,9 @@ def refine_ux_specification(spec: UXSpecification, respostas: list[dict]) -> UXS
         f"Fluxos atuais: {fluxos_atuais}\n"
         f"Seções de IA atuais: {spec.information_architecture.sections}\n"
         f"Notas de navegação atuais: {spec.information_architecture.navigation_notes}\n"
-        f"Recomendações de acessibilidade atuais: {spec.accessibility_recommendations}\n\n"
+        f"Recomendações de acessibilidade atuais: {spec.accessibility_recommendations}\n"
+        f"Personas de referência atuais: {spec.personas_reference}\n"
+        f"User Journey de referência atual: {spec.journey_reference}\n\n"
         "Respostas às perguntas de esclarecimento:\n"
         + "\n".join(perguntas_respostas)
         + "\n\nReescreva os campos incorporando essas respostas, resolvendo as lacunas "
@@ -33,7 +38,8 @@ def refine_ux_specification(spec: UXSpecification, respostas: list[dict]) -> UXS
         "simplifique um item para menos palavras do que já tinha.\n\n"
         'Responda apenas em JSON: {"titulo": "...", "contexto": "...", '
         '"fluxos": [{"nome": "...", "passos": ["..."]}], "secoes_ia": ["..."], '
-        '"notas_navegacao": "...", "acessibilidade": ["..."]}'
+        '"notas_navegacao": "...", "acessibilidade": ["..."], "personas": "...", '
+        '"jornada_usuario": "..."}'
     )
     dados = complete_json(prompt, system=_SYSTEM)
 
@@ -42,6 +48,8 @@ def refine_ux_specification(spec: UXSpecification, respostas: list[dict]) -> UXS
     spec.accessibility_recommendations = (
         dados.get("acessibilidade") or spec.accessibility_recommendations
     )
+    spec.personas_reference = dados.get("personas") or spec.personas_reference
+    spec.journey_reference = dados.get("jornada_usuario") or spec.journey_reference
 
     novos_fluxos = [
         UserFlow(

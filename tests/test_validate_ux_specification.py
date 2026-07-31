@@ -10,6 +10,8 @@ def _spec_completa(**overrides) -> UXSpecification:
         "user_flows": [UserFlow(name="f", steps=["passo 1", "passo 2"], source_reference="fonte")],
         "information_architecture": InformationArchitecture(sections=["Home"]),
         "accessibility_recommendations": ["recomendar a verificar contraste"],
+        "personas_reference": "Persona: Cidadão",
+        "journey_reference": "Jornada: agenda consulta",
     }
     base.update(overrides)
     return UXSpecification(**base)
@@ -49,6 +51,18 @@ def test_empty_information_architecture_fails():
 def test_no_accessibility_recommendations_fails():
     motivos = validate_ux_specification(_spec_completa(accessibility_recommendations=[]))
     assert "nenhuma recomendação de acessibilidade" in motivos
+
+
+def test_missing_personas_reference_fails():
+    """GR-UX-4: se o PRD não tiver Personas, reprova até o esclarecimento humano suprir a lacuna."""
+    motivos = validate_ux_specification(_spec_completa(personas_reference=""))
+    assert any("Personas não identificadas" in motivo for motivo in motivos)
+
+
+def test_missing_journey_reference_fails():
+    """GR-UX-4: se o PRD não tiver User Journey, reprova até o esclarecimento humano suprir a lacuna."""
+    motivos = validate_ux_specification(_spec_completa(journey_reference=""))
+    assert any("User Journey não identificada" in motivo for motivo in motivos)
 
 
 def test_multiplos_motivos_acumulam_em_vez_de_parar_no_primeiro():
