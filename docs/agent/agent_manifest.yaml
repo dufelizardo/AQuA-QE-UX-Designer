@@ -1,0 +1,42 @@
+name: UX Designer
+version: 0.1.0
+description: >
+  Gera UX Specifications (fluxos de navegação por tarefa, arquitetura da
+  informação e recomendações de acessibilidade) a partir de uma Story/Epic
+  do Product Owner e do PRD associado do Product Manager, com
+  rastreabilidade à fonte e validação automática antes da revisão humana
+  obrigatória. Nunca gera Personas ou User Journeys (responsabilidade
+  exclusiva do Product Manager) nem Wireframes/Protótipos/Design System
+  (responsabilidade futura do agente irmão UI Designer).
+
+inputs:
+  - confluence
+  - jira
+
+outputs:
+  - ux_specification
+  - markdown
+  - confluence_page
+
+skills:
+  - read_confluence_page
+  - read_jira_issue
+  - get_confluence_publish_location
+  - create_confluence_page
+  - extract_ux_context
+  - identify_user_flows
+  - design_information_architecture
+  - review_accessibility
+  - validate_ux_specification
+  - review_ux_specification
+  - generate_ux_clarifying_questions
+  - refine_ux_specification
+  - format_ux_specification_markdown
+
+memory:
+  vector: false
+  rag: false
+  knowledge_graph: false
+
+rules: rules.md
+spec: ai_spec.md
