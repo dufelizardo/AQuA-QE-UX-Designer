@@ -16,7 +16,9 @@ _SYSTEM = (
     "repetindo frases da Story como se fossem seções distintas.\n\n"
     "Baseie-se apenas no texto informado; nunca invente uma seção sem lastro na fonte. Cada "
     "seção deve ser uma única string de texto curta (ex.: 'Agendamentos: consulta e "
-    "gerenciamento de horários'), nunca um objeto/dicionário com campos separados."
+    "gerenciamento de horários'), nunca um objeto/dicionário com campos separados. O campo "
+    "'trecho_fonte' deve ser um EXCERTO CURTO (uma frase, no máximo ~200 caracteres) do Épico "
+    "que evidencia a arquitetura da informação — nunca o Épico inteiro nem o PRD completo."
 )
 
 

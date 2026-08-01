@@ -45,6 +45,20 @@ def _regras_usabilidade_md(notas: list[str]) -> str:
     return "\n".join(_regra_usabilidade_md(nota) for nota in notas) if notas else "(nenhuma)"
 
 
+_TRECHO_MAX_CARACTERES = 200
+
+
+def _trecho_para_tabela(trecho: str) -> str:
+    """Achata um trecho de origem para uma única linha e limita o tamanho, para nunca quebrar
+    a sintaxe de tabela Markdown (uma linha de tabela precisa ficar numa única linha) nem
+    inflar a tabela com o texto completo da fonte — achado ao vivo: identify_user_flows às
+    vezes devolve o PRD inteiro como trecho_fonte em vez de um excerto curto."""
+    texto = " ".join(trecho.split())
+    if len(texto) > _TRECHO_MAX_CARACTERES:
+        texto = texto[:_TRECHO_MAX_CARACTERES].rstrip() + "…"
+    return texto or "(não informado)"
+
+
 def _rastreabilidade_md(spec: UXSpecification) -> str:
     """Tabela de/para: cada artefato gerado, ligado ao trecho da fonte que o originou (GR-UX-1)."""
     linhas = [
@@ -54,10 +68,11 @@ def _rastreabilidade_md(spec: UXSpecification) -> str:
         f"| Story/Epic de origem | {spec.ticket_reference or '(não informado)'} |",
     ]
     for fluxo in spec.user_flows:
-        linhas.append(f"| User Flow: {fluxo.name} | {fluxo.source_reference or '(não informado)'} |")
+        linhas.append(f"| User Flow: {fluxo.name} | {_trecho_para_tabela(fluxo.source_reference)} |")
     if spec.information_architecture.sections:
-        origem_ia = spec.information_architecture.source_reference or "(não informado)"
-        linhas.append(f"| Information Architecture | {origem_ia} |")
+        linhas.append(
+            f"| Information Architecture | {_trecho_para_tabela(spec.information_architecture.source_reference)} |"
+        )
     return "\n".join(linhas)
 
 

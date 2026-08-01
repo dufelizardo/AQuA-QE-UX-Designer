@@ -44,9 +44,34 @@ def _item_para_string(item) -> str:
     return str(item)
 
 
+def _valor_para_string(valor) -> str:
+    """Achata um valor (string, lista ou dict aninhado) numa string legível de uma linha —
+    usado para os valores dentro de um dict de personas/jornada (ver `_dict_para_texto`)."""
+    if isinstance(valor, dict):
+        partes = [f"{chave}: {_valor_para_string(sub)}" for chave, sub in valor.items() if sub]
+        return "; ".join(partes)
+    if isinstance(valor, list):
+        return ", ".join(_item_para_string(item) for item in valor)
+    return str(valor) if valor else ""
+
+
+def _dict_para_texto(dicionario: dict) -> str:
+    """Achata um dict devolvido no lugar de uma string de personas/jornada — cobre tanto um
+    dict de nome->detalhes (ex.: personas por nome, com sub-dict de descrição/objetivos) quanto
+    um dict de passo->'' (ex.: jornada com cada passo como chave e valor vazio), um item por
+    linha no resultado."""
+    linhas = []
+    for chave, valor in dicionario.items():
+        detalhe = _valor_para_string(valor)
+        linhas.append(f"{chave}: {detalhe}" if detalhe else str(chave))
+    return "\n".join(linhas)
+
+
 def _texto_ou_lista(valor) -> str:
-    """Defesa contra o LLM devolver uma lista (de strings ou de objetos) em vez de uma única
-    string para personas/jornada."""
+    """Defesa contra o LLM devolver uma lista ou um dict (em formatos variados, achado ao vivo
+    em execuções diferentes) em vez de uma única string para personas/jornada."""
+    if isinstance(valor, dict):
+        return _dict_para_texto(valor)
     if isinstance(valor, list):
         return "\n".join(_item_para_string(item) for item in valor)
     return valor or ""

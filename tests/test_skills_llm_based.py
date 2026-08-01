@@ -109,6 +109,57 @@ def test_extract_ux_context_converte_lista_de_objetos_em_string(monkeypatch):
     )
 
 
+def test_extract_ux_context_converte_dict_de_personas_aninhado(monkeypatch):
+    """Regressão (achado ao vivo, Groq/llama-3.3-70b-versatile): 'personas' às vezes vem como
+    um dict de nome -> detalhes (descricao/objetivos/pontos_de_dor aninhados), não uma lista."""
+    monkeypatch.setattr(
+        extract_ux_context_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "titulo": "t",
+            "contexto": "c",
+            "personas": {
+                "Cidadãos": {
+                    "descricao": "Cidadãos são membros da população.",
+                    "objetivos": ["experiência superior"],
+                    "pontos_de_dor": ["longas filas"],
+                },
+                "Gestores": {"descricao": "Gestores administram as unidades.", "pontos_de_dor": []},
+            },
+        },
+    )
+
+    contexto = extract_ux_context_module.extract_ux_context("prd", "story")
+
+    assert "Cidadãos: descricao: Cidadãos são membros da população." in contexto["personas_reference"]
+    assert "objetivos: experiência superior" in contexto["personas_reference"]
+    assert "Gestores: descricao: Gestores administram as unidades." in contexto["personas_reference"]
+    assert "{" not in contexto["personas_reference"]
+
+
+def test_extract_ux_context_converte_dict_de_jornada_com_passos_como_chave(monkeypatch):
+    """Regressão (achado ao vivo, Groq/llama-3.3-70b-versatile): 'jornada_usuario' às vezes vem
+    como um dict onde cada passo da jornada é uma chave com valor vazio."""
+    monkeypatch.setattr(
+        extract_ux_context_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "titulo": "t",
+            "contexto": "c",
+            "jornada_usuario": {
+                "Cidadão solicita agendamento": "",
+                "Agente registra o agendamento": "",
+            },
+        },
+    )
+
+    contexto = extract_ux_context_module.extract_ux_context("prd", "story")
+
+    assert contexto["journey_reference"] == (
+        "Cidadão solicita agendamento\nAgente registra o agendamento"
+    )
+
+
 def test_identify_user_flows_maps_json_to_userflow(monkeypatch):
     monkeypatch.setattr(
         identify_user_flows_module,

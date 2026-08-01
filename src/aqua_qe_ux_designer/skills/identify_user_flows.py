@@ -9,7 +9,9 @@ _SYSTEM = (
     "(siga padrões de navegação já conhecidos do usuário), nunca como justificativa para "
     "adicionar um passo sem lastro na Story. Se a Story não tiver informação suficiente para "
     "um fluxo completo, retorne poucos passos em vez de inventar o restante. Cada passo deve "
-    "ser uma única string de texto, nunca um objeto/dicionário com campos separados."
+    "ser uma única string de texto, nunca um objeto/dicionário com campos separados. O campo "
+    "'trecho_fonte' deve ser um EXCERTO CURTO (uma frase, no máximo ~200 caracteres) da Story "
+    "que evidencia o fluxo — nunca a Story inteira nem o PRD completo."
 )
 
 

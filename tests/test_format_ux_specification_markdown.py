@@ -148,3 +148,39 @@ def test_format_ux_specification_markdown_omits_empty_sections_gracefully():
     assert "**PRD de origem**: (não informado)" in resultado
     assert "**Story/Epic de origem**: (não informado)" in resultado
     assert "| PRD de origem | (não informado) |" in resultado
+
+
+def test_format_ux_specification_markdown_rastreabilidade_achata_trecho_multilinha():
+    """Regressão (achado ao vivo, Groq): identify_user_flows às vezes devolve o PRD inteiro
+    (com múltiplas linhas) como trecho_fonte, o que quebrava a sintaxe de tabela Markdown
+    (uma linha de tabela precisa ficar numa única linha)."""
+    trecho_multilinha = "Linha um do PRD.\nLinha dois do PRD.\nLinha três do PRD."
+    spec = UXSpecification(
+        id="UX-008",
+        title="t",
+        context_problem="c",
+        user_flows=[UserFlow(name="Fluxo", steps=["a", "b"], source_reference=trecho_multilinha)],
+    )
+
+    resultado = format_ux_specification_markdown(spec)
+
+    assert "| User Flow: Fluxo | Linha um do PRD. Linha dois do PRD. Linha três do PRD. |" in resultado
+    assert "\n| User Flow" in resultado
+    linha_tabela = next(
+        linha for linha in resultado.splitlines() if linha.startswith("| User Flow: Fluxo")
+    )
+    assert "\n" not in linha_tabela
+
+
+def test_format_ux_specification_markdown_rastreabilidade_trunca_trecho_longo():
+    trecho_longo = "x" * 500
+    spec = UXSpecification(
+        id="UX-009",
+        title="t",
+        context_problem="c",
+        user_flows=[UserFlow(name="Fluxo", steps=["a", "b"], source_reference=trecho_longo)],
+    )
+
+    resultado = format_ux_specification_markdown(spec)
+
+    assert f"| User Flow: Fluxo | {'x' * 200}… |" in resultado
