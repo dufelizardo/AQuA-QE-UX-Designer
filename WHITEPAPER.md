@@ -119,3 +119,8 @@ Ver `README.md`/`README.pt.md` para o setup completo (Ollama, `.env`) e `run.py 
 ## 13. Conclusão
 
 O AQuA-QE UX Designer fecha uma lacuna real da plataforma — a camada de experiência do usuário entre "o que construir" (backlog do PO) e "como construir tecnicamente" (Solution Design do SA) — sem duplicar responsabilidades já cobertas pelos agentes irmãos. Sua Fase 1 é deliberadamente mais restrita do que a especialidade completa de UX Design, seguindo o mesmo princípio que já rege toda a plataforma: entregar o núcleo que cabe no padrão estabelecido (rastreabilidade, validação, revisão humana, artefato textual) primeiro, e documentar honestamente o que foi adiado — não construí-lo especulativamente.
+
+---
+
+**Eduardo Felizardo Cândido**
+Senior QA Automation Engineer | AI-driven Testing | Robot Framework & Python

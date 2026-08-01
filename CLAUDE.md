@@ -4,7 +4,7 @@ Este arquivo orienta o Claude Code ao trabalhar neste repositório.
 
 ## O que é este projeto
 
-Agente que gera UX Specifications (fluxos de navegação por tarefa, arquitetura da informação e recomendações de acessibilidade) a partir de uma Story/Epic do Product Owner e do PRD associado do Product Manager — com rastreabilidade obrigatória à fonte, validação automática e revisão humana no centro do ciclo. Ver `WHITEPAPER.md` (também em inglês: `WHITEPAPER.en.md`) para a visão completa.
+Agente que gera UX Specifications (fluxos de navegação por tarefa, arquitetura da informação e recomendações de acessibilidade) a partir de uma Story/Epic do Product Owner e do PRD associado do Product Manager — com rastreabilidade obrigatória à fonte, validação automática e revisão humana no centro do ciclo. Ver `WHITEPAPER.md` (também em inglês: `WHITEPAPER.en.md`) para a visão completa, `docs/agent/` para a especificação completa e `docs/architecture/` para os diagramas (draw.io + SVG).
 
 Este é um **repositório standalone**, próprio, independente de qualquer monorepo — não assuma dependências herdadas de um workspace pai.
 
@@ -66,4 +66,5 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 
 - `docs/agent/` — PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory (a spec formal completa do agente, escrita antes de qualquer código).
 - `knowledge/methodology/` — os frameworks reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério do agente foi inventado à parte desses documentos.
+- `docs/architecture/` — diagramas visuais (draw.io + SVG) dos mesmos fluxos: arquitetura em camadas, fluxo da UX Specification, GR-UX-4 (Personas/User Journey nunca geradas aqui), ciclo de refinamento humano-no-loop com memória RAG e o pipeline completo com o handoff entre Product Manager, Product Owner, este agente e o futuro UI Designer.
 - `WHITEPAPER.md` / `WHITEPAPER.en.md` — visão consolidada, inclui o que foi deliberadamente deixado fora da Fase 1 (seção 11).

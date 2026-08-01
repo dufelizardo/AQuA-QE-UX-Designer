@@ -54,3 +54,8 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) e `docs/standards/` estão completos. `knowledge/methodology/` tem os cinco documentos reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério foi inventado à parte deles. `knowledge/templates/ux_specification.md` define o formato de exportação (12 seções, incluindo referências ao PRD e placeholders explícitos de fase futura).
 
 `src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI) e `tests/` (92 testes, 98% cobertura) estão implementados. Ver `WHITEPAPER.md`, seção 11, para o que segue deliberadamente fora desta fase.
+
+---
+
+**Eduardo Felizardo Cândido**
+Senior QA Automation Engineer | AI-driven Testing | Robot Framework & Python
