@@ -52,7 +52,7 @@
 
 ## 12. Recomendações
 
-`<síntese curta apontando para as recomendações de acessibilidade (seção 6) e usabilidade (seção 10) já listadas acima — não repete o conteúdo completo dessas seções, só refere a contagem de itens, para o time de desenvolvimento/design revisar antes da implementação>`
+`<síntese priorizada (3-5 itens), gerada por synthesize_recommendations combinando as recomendações de acessibilidade (seção 6) e usabilidade (seção 10) — nunca inclui um item que não esteja em uma das duas, é uma reordenação/resumo do que já existe, não conteúdo novo>`
 
 ## Rastreabilidade
 

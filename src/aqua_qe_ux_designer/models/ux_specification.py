@@ -22,5 +22,6 @@ class UXSpecification:
     ticket_reference: str = ""
     personas_reference: str = ""
     journey_reference: str = ""
+    recommendations_synthesis: list[str] = field(default_factory=list)
     status: ArtifactStatus = ArtifactStatus.PENDING_CLARIFICATION
     review_notes: list[str] = field(default_factory=list)

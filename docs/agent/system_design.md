@@ -16,9 +16,10 @@ Entrada (PRD via Confluence + Epics/Stories via Jira)
    → validate_ux_specification (checklist automático)
    → review_ux_specification (LLM revisor independente — phi4 — heurísticas de Nielsen)
    → [se reprovado] generate_ux_clarifying_questions → resposta humana → refine_ux_specification → revalidar
+   → synthesize_recommendations (síntese priorizada de acessibilidade + usabilidade)
    → aceite humano explícito
    → format_ux_specification_markdown (export local)
-   → [opcional] get_confluence_publish_location → create_confluence_page
+   → [opcional] get_confluence_publish_location → create_confluence_page (nova) OU update_confluence_page (existente)
 ```
 
 ## Componentes
@@ -26,7 +27,7 @@ Entrada (PRD via Confluence + Epics/Stories via Jira)
 - **Orquestrador** — ponto de entrada único (`handle_request`), decide a sequência de skills (ordem fixa do `agent_manifest.yaml`). Implementado em `../../src/aqua_qe_ux_designer/orchestrator/ux_designer.py`.
 - **Workflow** — orquestração da sequência de skills (`generate_ux_specification`, `finalize_ux_specification`), implementado em `../../src/aqua_qe_ux_designer/workflow/`.
 - **Skills** — funções descritas em `skills.md`, implementadas em `../../src/aqua_qe_ux_designer/skills/`.
-- **Modelos de dados** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ChatMessage`, enum `ArtifactStatus`, implementados em `../../src/aqua_qe_ux_designer/models/`, conforme `output_schema.md`.
+- **Modelos de dados** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`, implementados em `../../src/aqua_qe_ux_designer/models/`, conforme `output_schema.md`. Sem `ChatMessage` — este agente não tem skill de chat.
 - **Fontes de conhecimento** — `knowledge/methodology/` (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX), consumido diretamente no prompt de cada skill (sem RAG nesta fase — o volume cabe direto no contexto, mesma decisão de PM/SA na Fase 1).
 - **Interfaces externas** — entrada: página Confluence (PRD, leitura) e ticket Jira (Epic/Story, leitura); saída: arquivo Markdown exportado (`format_ux_specification_markdown`) e, opcionalmente, uma página no Confluence (`create_confluence_page`), sempre irmã da página de origem do PRD e sempre atrás de confirmação humana.
 

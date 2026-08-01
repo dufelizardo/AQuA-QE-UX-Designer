@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 Um pipeline de skills orquestrado sequencialmente, com dois pontos de checagem antes de qualquer saída ser considerada válida: validação automática (checklist estrutural, Python puro) e revisão humana obrigatória. Ver `docs/agent/system_design.md` para o fluxo de dados completo.
 
-## 5. As 14 skills
+## 5. As 15 skills
 
 Skills sem LLM (Python puro, determinística):
 
@@ -44,7 +44,7 @@ Skills sem LLM (Python puro, determinística):
 
 Skills com LLM gerador (`OLLAMA_MODEL`, padrão `mistral`):
 
-- `extract_ux_context`, `identify_user_flows`, `design_information_architecture`, `review_accessibility`, `generate_ux_clarifying_questions`, `refine_ux_specification`.
+- `extract_ux_context`, `identify_user_flows`, `design_information_architecture`, `review_accessibility`, `generate_ux_clarifying_questions`, `refine_ux_specification`, `synthesize_recommendations`.
 
 Skills com LLM revisor independente (`OLLAMA_REVIEW_MODEL`, padrão `phi4` — deliberadamente um modelo diferente do gerador, para mitigar *self-preference bias*):
 

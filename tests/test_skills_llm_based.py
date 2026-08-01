@@ -10,6 +10,9 @@ from aqua_qe_ux_designer.skills import identify_user_flows as identify_user_flow
 from aqua_qe_ux_designer.skills import refine_ux_specification as refine_ux_specification_module
 from aqua_qe_ux_designer.skills import review_accessibility as review_accessibility_module
 from aqua_qe_ux_designer.skills import review_ux_specification as review_ux_specification_module
+from aqua_qe_ux_designer.skills import (
+    synthesize_recommendations as synthesize_recommendations_module,
+)
 
 
 def _spec(**overrides) -> UXSpecification:
@@ -397,3 +400,51 @@ def test_refine_ux_specification_preenche_personas_journey_ausentes_via_resposta
 
     assert resultado.personas_reference == "Cidadãos que não usam o aplicativo, atendidos presencialmente"
     assert resultado.journey_reference == "Cidadão vai à unidade, agente registra o agendamento em seu nome"
+
+
+def test_synthesize_recommendations_maps_json_to_list(monkeypatch):
+    monkeypatch.setattr(
+        synthesize_recommendations_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "sintese": ["verificar contraste (WCAG 1.4.3)", "visibilidade do status do sistema"]
+        },
+    )
+
+    resultado = synthesize_recommendations_module.synthesize_recommendations(
+        ["verificar contraste (WCAG 1.4.3)"], ["visibilidade do status do sistema"]
+    )
+
+    assert resultado == ["verificar contraste (WCAG 1.4.3)", "visibilidade do status do sistema"]
+
+
+def test_synthesize_recommendations_returns_empty_without_calling_llm_when_both_empty(monkeypatch):
+    chamou = {"valor": False}
+
+    def fake_complete_json(prompt, system="", model=None):
+        chamou["valor"] = True
+        return {"sintese": []}
+
+    monkeypatch.setattr(synthesize_recommendations_module, "complete_json", fake_complete_json)
+
+    resultado = synthesize_recommendations_module.synthesize_recommendations([], [])
+
+    assert resultado == []
+    assert chamou["valor"] is False
+
+
+def test_synthesize_recommendations_converte_item_objeto_em_string(monkeypatch):
+    """Defesa contra o LLM devolver um objeto em vez de string para um item da síntese."""
+    monkeypatch.setattr(
+        synthesize_recommendations_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "sintese": [{"recomendacao": "verificar contraste (WCAG 1.4.3)"}]
+        },
+    )
+
+    resultado = synthesize_recommendations_module.synthesize_recommendations(
+        ["verificar contraste (WCAG 1.4.3)"], []
+    )
+
+    assert resultado == ["verificar contraste (WCAG 1.4.3)"]

@@ -27,7 +27,9 @@
   "source_reference": "<texto de origem completo (Story/Epic + contexto do PRD), para rastreabilidade — GR-UX-1>",
   "prd_reference": "<URL/ID da página Confluence do PRD de origem, conforme informado em --confluence>",
   "ticket_reference": "<chave do ticket Jira de origem, conforme informado em --jira>",
-  "personas_journeys_reference": "<trecho de Personas/User Journey citado literalmente do PRD por extract_ux_context — nunca gerado; vazio se o PRD não tiver essa seção (GR-UX-4), o que reprova o checklist e aciona o ciclo de esclarecimento>",
+  "personas_reference": "<trecho de Personas citado literalmente do PRD por extract_ux_context — nunca gerado; vazio se o PRD não tiver essa seção (GR-UX-4), o que reprova o checklist e aciona o ciclo de esclarecimento>",
+  "journey_reference": "<trecho de User Journey citado literalmente do PRD por extract_ux_context — nunca gerado; vazio se o PRD não tiver essa seção (GR-UX-4), o que reprova o checklist e aciona o ciclo de esclarecimento>",
+  "recommendations_synthesis": ["<síntese priorizada gerada por synthesize_recommendations, combinando accessibility_recommendations e review_notes — nunca um item que não esteja em uma das duas>"],
   "status": "draft_validated | pending_clarification | accepted",
   "review_notes": ["<motivo de reprovação do checklist (validate_ux_specification) OU apontamento heurístico do revisor (review_ux_specification), se houver — sempre rotulado como avaliação de especialista, nunca teste real (GR-UX-3)>"]
 }

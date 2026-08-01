@@ -23,8 +23,8 @@ def _referencia_prd_md(referencia: str, rotulo: str) -> str:
     return f"> Não disponível no PRD de origem — nenhuma {rotulo} identificada."
 
 
-_TOPICO_MAX_CARACTERES = 60
-_TOPICO_MAX_PALAVRAS = 6
+_TOPICO_MAX_CARACTERES = 80
+_TOPICO_MAX_PALAVRAS = 10
 
 
 def _regra_usabilidade_md(nota: str) -> str:
@@ -43,10 +43,6 @@ def _regra_usabilidade_md(nota: str) -> str:
 
 def _regras_usabilidade_md(notas: list[str]) -> str:
     return "\n".join(_regra_usabilidade_md(nota) for nota in notas) if notas else "(nenhuma)"
-
-
-def _pluralizar_item(quantidade: int) -> str:
-    return f"{quantidade} item" if quantidade == 1 else f"{quantidade} itens"
 
 
 def _rastreabilidade_md(spec: UXSpecification) -> str:
@@ -83,7 +79,7 @@ def format_ux_specification_markdown(spec: UXSpecification) -> str:
         f"{_referencia_prd_md(spec.personas_reference, 'seção de Personas')}\n\n"
         f"## 4. User Flows\n\n{_fluxos_md(spec)}\n\n"
         "## 5. Information Architecture\n\n"
-        f"Seções: {_lista_md(ia.sections)}\n\n"
+        f"Seções:\n\n{_lista_md(ia.sections)}\n\n"
         f"Notas de navegação: {ia.navigation_notes or '(nenhuma)'}\n\n"
         f"## 6. Recomendações de Acessibilidade\n{_lista_md(spec.accessibility_recommendations)}\n\n"
         "## 7. User Journey\n\n"
@@ -111,8 +107,9 @@ def format_ux_specification_markdown(spec: UXSpecification) -> str:
         "System (novos componentes/variações) dependem de Wireframes/Protótipos existirem "
         "primeiro. Preenchida pelo futuro AQuA-QE UI Designer.\n\n"
         "## 12. Recomendações\n\n"
-        f"Antes da implementação, revisar as recomendações de acessibilidade (seção 6, "
-        f"{_pluralizar_item(len(spec.accessibility_recommendations))}) e as observações de "
-        f"usabilidade (seção 10, {_pluralizar_item(len(spec.review_notes))}) acima.\n\n"
+        "> Síntese priorizada das recomendações de acessibilidade (seção 6) e observações de "
+        "usabilidade (seção 10) acima — nunca inclui um item que não esteja em uma das duas "
+        "seções.\n\n"
+        f"{_lista_md(spec.recommendations_synthesis)}\n\n"
         f"## Rastreabilidade\n\n{_rastreabilidade_md(spec)}\n"
     )

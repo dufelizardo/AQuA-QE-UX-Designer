@@ -40,7 +40,7 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 ```
 
 - `src/aqua_qe_ux_designer/models/` — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`. Sem `ChatMessage` — este agente não tem skill de chat (`agent_manifest.yaml` só lista `confluence`/`jira` como inputs).
-- `src/aqua_qe_ux_designer/skills/` — 14 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- `src/aqua_qe_ux_designer/skills/` — 15 funções de responsabilidade única (ver `docs/agent/skills.md`).
 - `src/aqua_qe_ux_designer/workflow/generate_ux_specification.py` — `generate_ux_specification`, `finalize_ux_specification` (validate→review), `refine_and_finalize_ux_specification`.
 - `src/aqua_qe_ux_designer/orchestrator/ux_designer.py` — ponto de entrada único, `handle_request(texto_prd, texto_ticket)`.
 - `src/aqua_qe_ux_designer/services/` — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado verbatim do Solution Architect).

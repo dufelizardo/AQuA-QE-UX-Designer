@@ -5,6 +5,7 @@ from ..skills.identify_user_flows import identify_user_flows
 from ..skills.refine_ux_specification import refine_ux_specification as _refinar_campos
 from ..skills.review_accessibility import review_accessibility
 from ..skills.review_ux_specification import review_ux_specification
+from ..skills.synthesize_recommendations import synthesize_recommendations
 from ..skills.validate_ux_specification import validate_ux_specification
 
 
@@ -14,14 +15,17 @@ def finalize_ux_specification(spec: UXSpecification) -> UXSpecification:
     if motivos_checklist:
         spec.status = ArtifactStatus.PENDING_CLARIFICATION
         spec.review_notes = motivos_checklist
-        return spec
+    else:
+        revisao = review_ux_specification(spec)
+        spec.review_notes = revisao["problemas"]
+        spec.status = (
+            ArtifactStatus.DRAFT_VALIDATED
+            if revisao["aprovado"]
+            else ArtifactStatus.PENDING_CLARIFICATION
+        )
 
-    revisao = review_ux_specification(spec)
-    spec.review_notes = revisao["problemas"]
-    spec.status = (
-        ArtifactStatus.DRAFT_VALIDATED
-        if revisao["aprovado"]
-        else ArtifactStatus.PENDING_CLARIFICATION
+    spec.recommendations_synthesis = synthesize_recommendations(
+        spec.accessibility_recommendations, spec.review_notes
     )
     return spec
 

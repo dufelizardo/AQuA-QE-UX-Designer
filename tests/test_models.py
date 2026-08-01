@@ -29,6 +29,7 @@ def test_ux_specification_defaults_to_pending_clarification():
     assert spec.ticket_reference == ""
     assert spec.personas_reference == ""
     assert spec.journey_reference == ""
+    assert spec.recommendations_synthesis == []
 
 
 def test_ux_specification_accepts_full_payload():
@@ -44,6 +45,7 @@ def test_ux_specification_accepts_full_payload():
         ticket_reference="AQUAQE-11",
         personas_reference="Persona: Cidadão",
         journey_reference="Jornada: agenda consulta",
+        recommendations_synthesis=["priorizar validação em tempo real"],
         status=ArtifactStatus.DRAFT_VALIDATED,
         review_notes=["nota"],
     )
@@ -54,3 +56,4 @@ def test_ux_specification_accepts_full_payload():
     assert spec.ticket_reference == "AQUAQE-11"
     assert spec.personas_reference == "Persona: Cidadão"
     assert spec.journey_reference == "Jornada: agenda consulta"
+    assert spec.recommendations_synthesis == ["priorizar validação em tempo real"]

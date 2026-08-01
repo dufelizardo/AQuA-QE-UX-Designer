@@ -30,6 +30,7 @@ def test_format_ux_specification_markdown_includes_all_fields():
         review_notes=[
             "Visibilidade do status do sistema — o fluxo não informa o usuário após cada etapa"
         ],
+        recommendations_synthesis=["priorizar feedback visual após cada etapa do agendamento"],
     )
 
     resultado = format_ux_specification_markdown(spec)
@@ -46,7 +47,7 @@ def test_format_ux_specification_markdown_includes_all_fields():
     assert "1. abrir tela de agendamento" in resultado
     assert "2. escolher horário" in resultado
     assert "3. confirmar" in resultado
-    assert "Seções: - Início\n- Agendamentos" in resultado
+    assert "Seções:\n\n- Início\n- Agendamentos" in resultado
     assert "Agendamentos acessível pela home" in resultado
     assert "- verificar contraste (WCAG 1.4.3)" in resultado
     assert (
@@ -57,8 +58,7 @@ def test_format_ux_specification_markdown_includes_all_fields():
     assert "Não gerado por este agente" in resultado
     assert "devem ser extraídas literalmente do PRD de origem" in resultado
     assert "deve ser extraída literalmente do PRD de origem" in resultado
-    assert "revisar as recomendações de acessibilidade (seção 6, 1 item)" in resultado
-    assert "observações de usabilidade (seção 10, 1 item)" in resultado
+    assert "- priorizar feedback visual após cada etapa do agendamento" in resultado
     assert "| User Flow: Agendamento assistido | trecho 1 |" in resultado
     assert "| Information Architecture | trecho 2 |" in resultado
     assert "| PRD de origem | https://example.atlassian.net/wiki/pages/1179649/PRD |" in resultado
@@ -95,6 +95,21 @@ def test_format_ux_specification_markdown_negrita_topico_com_dois_pontos():
         "- **Consistência e padrões**: o fluxo pode quebrar a consistência com outros serviços"
         in resultado
     )
+
+
+def test_format_ux_specification_markdown_negrita_topico_de_ate_dez_palavras():
+    """Regressão (achado ao vivo): um tópico heurístico legítimo de 8 palavras
+    ("Flexibilidade e eficiência do caminho para o uso") não estava sendo negritado
+    porque a guarda antiga (6 palavras) era curta demais."""
+    nota = (
+        "Flexibilidade e eficiência do caminho para o uso: o processo pode exigir "
+        "navegação física entre seções"
+    )
+    spec = UXSpecification(id="UX-007", title="t", context_problem="c", review_notes=[nota])
+
+    resultado = format_ux_specification_markdown(spec)
+
+    assert "- **Flexibilidade e eficiência do caminho para o uso**:" in resultado
 
 
 def test_format_ux_specification_markdown_nao_negrita_frase_longa_com_dois_pontos():
