@@ -138,3 +138,21 @@
 - **Efeitos colaterais**: nenhum — Python puro, sem LLM.
 - **Erros esperados**: nenhum.
 - **Dependências**: consome a saída final de `refine_ux_specification` (ou a saída inicial, se aprovada sem refino).
+
+## record_refinement_answer
+
+- **Descrição**: grava uma resposta que o humano deu a uma pergunta de esclarecimento do ciclo de refinamento, para reaproveitamento futuro como sugestão editável — memória institucional entre ciclos (mesmo ou de outro artefato/projeto), nunca aplicada automaticamente. Mesmo desenho já validado ao vivo em AQuA-QE Product Manager e Product Owner.
+- **Entrada**: `pergunta: str`, `resposta: str`, `tipo_artefato: str` (aqui sempre `"ux_specification"`, já que este agente só tem um artefato).
+- **Saída**: `None`.
+- **Efeitos colaterais**: grava um ponto na collection Qdrant embarcada `refinement_answer_memory` (embedding via Ollama `bge-m3`).
+- **Erros esperados**: nenhum tratado especificamente.
+- **Dependências**: chamada pelo CLI (`run.py --refinar`) logo após cada resposta não vazia do humano.
+
+## suggest_refinement_answer
+
+- **Descrição**: busca a resposta de refinamento mais parecida já dada antes (memória institucional) para a pergunta atual, e a exibe como sugestão — sempre editável, nunca aplicada automaticamente. Sem gate de score mínimo (sem corpus histórico para calibrar um threshold) e sem filtro por `tipo_artefato`.
+- **Entrada**: `pergunta: str`.
+- **Saída**: `dict | None` (`pergunta`, `resposta`, `tipo_artefato`, `score`), `None` se a collection ainda não existir ou não houver resultado.
+- **Efeitos colaterais**: consulta a collection Qdrant embarcada `refinement_answer_memory`.
+- **Erros esperados**: nenhum tratado especificamente.
+- **Dependências**: chamada pelo CLI (`run.py --refinar`) antes de cada `input()` de resposta.

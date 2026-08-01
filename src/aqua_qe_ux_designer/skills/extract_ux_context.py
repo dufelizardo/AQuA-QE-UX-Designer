@@ -34,10 +34,21 @@ _SYSTEM = (
 )
 
 
+def _item_para_string(item) -> str:
+    """Defesa contra o LLM devolver um objeto em vez de string para um item de personas/jornada
+    (ex.: {"nome": ..., "descricao": ...})."""
+    if isinstance(item, dict):
+        nome = item.get("nome", "")
+        descricao = item.get("descricao", "")
+        return f"{nome}: {descricao}" if descricao else (nome or str(item))
+    return str(item)
+
+
 def _texto_ou_lista(valor) -> str:
-    """Defesa contra o LLM devolver uma lista em vez de uma única string para personas/jornada."""
+    """Defesa contra o LLM devolver uma lista (de strings ou de objetos) em vez de uma única
+    string para personas/jornada."""
     if isinstance(valor, list):
-        return "\n".join(str(item) for item in valor)
+        return "\n".join(_item_para_string(item) for item in valor)
     return valor or ""
 
 

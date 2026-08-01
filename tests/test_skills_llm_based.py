@@ -85,6 +85,30 @@ def test_extract_ux_context_converte_lista_em_string(monkeypatch):
     )
 
 
+def test_extract_ux_context_converte_lista_de_objetos_em_string(monkeypatch):
+    """Regressão (achado ao vivo): o Ollama (mistral) às vezes devolve 'personas' como uma
+    lista de objetos ({"nome": ..., "descricao": ...}) em vez de strings simples."""
+    monkeypatch.setattr(
+        extract_ux_context_module,
+        "complete_json",
+        lambda prompt, system="", model=None: {
+            "titulo": "t",
+            "contexto": "c",
+            "personas": [
+                {"nome": "Cidadão", "descricao": "precisa agendar atendimento presencial"},
+                {"nome": "Profissional de saúde", "descricao": "registra o agendamento"},
+            ],
+        },
+    )
+
+    contexto = extract_ux_context_module.extract_ux_context("prd", "story")
+
+    assert contexto["personas_reference"] == (
+        "Cidadão: precisa agendar atendimento presencial\n"
+        "Profissional de saúde: registra o agendamento"
+    )
+
+
 def test_identify_user_flows_maps_json_to_userflow(monkeypatch):
     monkeypatch.setattr(
         identify_user_flows_module,

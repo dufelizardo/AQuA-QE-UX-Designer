@@ -26,7 +26,7 @@ This project has its own git repository, independent from the root monorepo (per
 ## Architecture (summary — full detail in `docs/agent/system_design.md`)
 
 - **`src/aqua_qe_ux_designer/models/`** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, `ArtifactStatus` enum.
-- **`src/aqua_qe_ux_designer/skills/`** — 15 single-responsibility functions (see `docs/agent/skills.md`).
+- **`src/aqua_qe_ux_designer/skills/`** — 17 single-responsibility functions (see `docs/agent/skills.md`).
 - **`src/aqua_qe_ux_designer/workflow/`** — orchestrates the skill sequence.
 - **`src/aqua_qe_ux_designer/orchestrator/`** — single entry point (`handle_request`).
 - **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama by default, no cloud provider pilot at this phase), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect).
@@ -34,10 +34,11 @@ This project has its own git repository, independent from the root monorepo (per
 ## Setup
 
 1. Install [Python 3.12+](https://www.python.org/) and [uv](https://docs.astral.sh/uv/).
-2. Install [Ollama](https://ollama.com) and pull the two local models this agent uses:
+2. Install [Ollama](https://ollama.com) and pull the three local models this agent uses:
    ```bash
    ollama pull mistral   # generation
    ollama pull phi4      # independent review
+   ollama pull bge-m3    # embeddings (institutional refinement memory)
    ```
 3. Install dependencies:
    ```bash
@@ -52,4 +53,4 @@ This project has its own git repository, independent from the root monorepo (per
 
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) and `docs/standards/` are complete. `knowledge/methodology/` has the five real documents grounding the quality criteria (Nielsen's 10 Heuristics, WCAG 2.2, Information Architecture principles, ISO 9241-210, Laws of UX) — no criterion was invented apart from them. `knowledge/templates/ux_specification.md` defines the export format (12 sections, including PRD references and explicit future-phase placeholders).
 
-`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), and `tests/` (78 tests, 99% coverage) are implemented. See `WHITEPAPER.en.md`, section 11, for what's deliberately left out of this phase.
+`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI), and `tests/` (92 tests, 98% coverage) are implemented. See `WHITEPAPER.en.md`, section 11, for what's deliberately left out of this phase.

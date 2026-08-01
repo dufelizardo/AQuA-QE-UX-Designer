@@ -26,7 +26,7 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 ## Arquitetura (resumo — detalhe completo em `docs/agent/system_design.md`)
 
 - **`src/aqua_qe_ux_designer/models/`** — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`.
-- **`src/aqua_qe_ux_designer/skills/`** — 15 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- **`src/aqua_qe_ux_designer/skills/`** — 17 funções de responsabilidade única (ver `docs/agent/skills.md`).
 - **`src/aqua_qe_ux_designer/workflow/`** — orquestração da sequência de skills.
 - **`src/aqua_qe_ux_designer/orchestrator/`** — ponto de entrada único (`handle_request`).
 - **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama por padrão, sem piloto de provedor em nuvem nesta fase), `jira_service` (apenas leitura), `confluence_service` (leitura + escrita gated, reaproveitado do Solution Architect).
@@ -34,10 +34,11 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 ## Configuração
 
 1. Instale [Python 3.12+](https://www.python.org/) e [uv](https://docs.astral.sh/uv/).
-2. Instale o [Ollama](https://ollama.com) e baixe os dois modelos locais usados por este agente:
+2. Instale o [Ollama](https://ollama.com) e baixe os três modelos locais usados por este agente:
    ```bash
    ollama pull mistral   # geração
    ollama pull phi4      # revisão independente
+   ollama pull bge-m3    # embeddings (memória institucional de refinamento)
    ```
 3. Instale as dependências:
    ```bash
@@ -52,4 +53,4 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 
 `docs/agent/` (PRD, System Design, Agent Design, Rules, Guardrails, Persona, Objectives, Skills, Evaluation, Memory) e `docs/standards/` estão completos. `knowledge/methodology/` tem os cinco documentos reais que fundamentam os critérios de qualidade (10 Heurísticas de Nielsen, WCAG 2.2, princípios de Arquitetura da Informação, ISO 9241-210, Laws of UX) — nenhum critério foi inventado à parte deles. `knowledge/templates/ux_specification.md` define o formato de exportação (12 seções, incluindo referências ao PRD e placeholders explícitos de fase futura).
 
-`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI) e `tests/` (78 testes, 99% cobertura) estão implementados. Ver `WHITEPAPER.md`, seção 11, para o que segue deliberadamente fora desta fase.
+`src/` (models/skills/workflow/orchestrator/services), `run.py` (CLI) e `tests/` (92 testes, 98% cobertura) estão implementados. Ver `WHITEPAPER.md`, seção 11, para o que segue deliberadamente fora desta fase.

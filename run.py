@@ -27,6 +27,12 @@ from aqua_qe_ux_designer.skills.get_confluence_publish_location import (  # noqa
 )
 from aqua_qe_ux_designer.skills.read_confluence_page import read_confluence_page  # noqa: E402
 from aqua_qe_ux_designer.skills.read_jira_issue import read_jira_issue  # noqa: E402
+from aqua_qe_ux_designer.skills.record_refinement_answer import (  # noqa: E402
+    record_refinement_answer,
+)
+from aqua_qe_ux_designer.skills.suggest_refinement_answer import (  # noqa: E402
+    suggest_refinement_answer,
+)
 from aqua_qe_ux_designer.skills.update_confluence_page import update_confluence_page  # noqa: E402
 from aqua_qe_ux_designer.workflow.generate_ux_specification import (  # noqa: E402
     refine_and_finalize_ux_specification,
@@ -62,8 +68,16 @@ def _ciclo_de_refinamento(spec: UXSpecification) -> UXSpecification:
         print("\nO revisor apontou problemas. Responda para ajudar a refinar a UX Specification:")
         respostas = []
         for pergunta in perguntas:
+            sugestao = suggest_refinement_answer(pergunta)
+            if sugestao:
+                print(
+                    f"  \U0001F4A1 Resposta usada antes p/ pergunta parecida "
+                    f"(similaridade {sugestao['score']:.2f}): {sugestao['resposta']}"
+                )
             resposta = input(f"  {pergunta}\n  > ")
             respostas.append({"pergunta": pergunta, "resposta": resposta})
+            if resposta.strip():
+                record_refinement_answer(pergunta, resposta, tipo_artefato="ux_specification")
 
         spec = refine_and_finalize_ux_specification(spec, respostas)
         print("\n--- UX Specification refinada ---")

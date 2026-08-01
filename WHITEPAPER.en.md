@@ -6,7 +6,7 @@ AQuA-QE UX Designer is the platform's fourth agent, specialized in translating a
 
 This document describes Phase 1 of the agent — deliberately leaner than a human UX Designer's full specialty set, because half of what would look like exclusive UX specialties (Personas, User Journey) are already the Product Manager's responsibility, and another part (Wireframes, Prototypes, Design System) requires an integration (Figma) the platform doesn't have yet — reserved for a future sibling agent, AQuA-QE UI Designer.
 
-**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/` — 78 tests, 99% coverage) is done (Phase 1/MVP).
+**Status as of this document**: the formal spec (`docs/agent/`) is complete; implementation (`src/`, `run.py`, `tests/` — 92 tests, 98% coverage) is done (Phase 1/MVP).
 
 ## 2. Methodological grounding
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 A sequentially orchestrated pipeline of skills, with two checkpoints before any output is considered valid: automatic validation (structural checklist, pure Python) and mandatory human review. See `docs/agent/system_design.md` for the full data flow.
 
-## 5. The 15 skills
+## 5. The 17 skills
 
 Skills with no LLM (pure Python, deterministic):
 
@@ -93,11 +93,11 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 
 - **Local LLM via Ollama (sole provider at this phase)** — `mistral` for generation, `phi4` as independent reviewer. Unlike PM/PO/SA, **this agent is not born with the cloud provider pilot** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — that toggle was only added to the sibling agents after real, proven need (rate limits, instability); here, it's added when/if the same need arises, not built ahead of time.
 - **`uv`** for dependencies — standalone project (own repository, outside the monorepo that originated it).
-- **No RAG/embeddings at this phase** — `knowledge/methodology/` has only 5 files, small enough to fit directly in each skill's prompt.
+- **No RAG over `knowledge/methodology/` at this phase** — only 5 files, small enough to fit directly in each skill's prompt. There is, however, embedding/RAG for one specific purpose: institutional memory of refinement answers (`embedding_service`/`rag_service`, embedded Qdrant — see section 6/`docs/agent/memory.md`).
 
 ## 10. Quality and test coverage
 
-78 tests, 99% coverage — same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
+92 tests, 98% coverage — same pattern as the three sibling agents: tests always mock Ollama/Jira/Confluence, no real network calls, three-layer evaluation (automatic checklist, LLM-as-judge, human review — see `docs/agent/evaluation.md`).
 
 ## 11. What's still missing (deliberately deferred, not forgotten)
 
@@ -105,7 +105,6 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 - **Research with real users and real Usability Testing** — permanently out of scope: the agent has no access to real users or product telemetry (Hotjar, Google Analytics, Mixpanel, Amplitude, Maze). Replaced by expert heuristic review, never presented as real research/testing.
 - **Wireframes, Prototypes, and Design System** — deferred to a future sibling agent, **AQuA-QE UI Designer** (name already defined, scope not yet formalized). Requires the platform's first non-text integration (real Figma, read and write).
 - **Cloud LLM provider pilot** — deferred until real, proven need exists, same pattern that motivated its adoption in PM/PO/SA.
-- **Institutional memory of refinement answers (RAG)** — already implemented in the sibling Product Manager and Product Owner agents; flagged as an opportunity to consider from day 1 of this agent's implementation, but not included in Phase 1 by default (see `docs/agent/memory.md`).
 - **SA↔UX Designer integration** (Solution Architect consuming the UX Specification as additional context) — not implemented at this phase, a natural extension to consider once real demand exists.
 
 ## 12. How to run

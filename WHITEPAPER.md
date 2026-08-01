@@ -6,7 +6,7 @@ O AQuA-QE UX Designer é o quarto agente da plataforma AQuA-QE, especializado em
 
 Este documento descreve a Fase 1 do agente — deliberadamente mais enxuta do que a especialidade completa de um UX Designer humano, porque metade do que pareceriam especialidades exclusivas (Personas, User Journey) já são responsabilidade do Product Manager, e outra parte (Wireframes, Protótipos, Design System) exige uma integração (Figma) que a plataforma ainda não tem — reservada para um futuro agente irmão, o AQuA-QE UI Designer.
 
-**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/` — 78 testes, 99% cobertura) está pronta (Fase 1/MVP).
+**Status no momento deste documento**: a spec formal (`docs/agent/`) está completa; a implementação (`src/`, `run.py`, `tests/` — 92 testes, 98% cobertura) está pronta (Fase 1/MVP).
 
 ## 2. Fundamentação metodológica
 
@@ -35,7 +35,7 @@ Story/Epic (Jira) + PRD (Confluence)
 
 Um pipeline de skills orquestrado sequencialmente, com dois pontos de checagem antes de qualquer saída ser considerada válida: validação automática (checklist estrutural, Python puro) e revisão humana obrigatória. Ver `docs/agent/system_design.md` para o fluxo de dados completo.
 
-## 5. As 15 skills
+## 5. As 17 skills
 
 Skills sem LLM (Python puro, determinística):
 
@@ -93,11 +93,11 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 
 - **LLM local via Ollama (único provedor nesta fase)** — `mistral` para geração, `phi4` como revisor independente. Diferente de PM/PO/SA, **este agente não nasce com o piloto de provedor em nuvem** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — esse toggle só foi adicionado nos agentes irmãos depois de necessidade real comprovada (rate limit, instabilidade); aqui, é adicionado quando/se a mesma necessidade surgir, não construído antecipadamente.
 - **`uv`** para dependências — projeto standalone (repositório próprio, fora do monorepo que o originou).
-- **Sem RAG/embeddings nesta fase** — `knowledge/methodology/` tem só 5 arquivos, pequeno o suficiente para caber direto no prompt de cada skill.
+- **Sem RAG sobre `knowledge/methodology/` nesta fase** — só 5 arquivos, pequeno o suficiente para caber direto no prompt de cada skill. Há, porém, embedding/RAG para um propósito específico: memória institucional de respostas de refinamento (`embedding_service`/`rag_service`, Qdrant embarcado — ver seção 6/`docs/agent/memory.md`).
 
 ## 10. Qualidade e cobertura de testes
 
-78 testes, 99% de cobertura — mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
+92 testes, 98% de cobertura — mesmo padrão dos três agentes irmãos: testes sempre mockam Ollama/Jira/Confluence, nenhuma chamada real de rede, avaliação em três camadas (checklist automático, LLM-como-juiz, revisão humana — ver `docs/agent/evaluation.md`).
 
 ## 11. O que ainda falta (deliberadamente adiado, não esquecido)
 
@@ -105,7 +105,6 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 - **Pesquisa com usuário real e Teste de Usabilidade real** — permanentemente fora de escopo: o agente não tem acesso a usuários reais nem telemetria de produto (Hotjar, Google Analytics, Mixpanel, Amplitude, Maze). Substituídos por revisão heurística de especialista, nunca apresentada como pesquisa/teste real.
 - **Wireframes, Protótipos e Design System** — adiado para um agente irmão futuro, o **AQuA-QE UI Designer** (nome já definido, escopo ainda não formalizado). Requer a primeira integração não-textual da plataforma (Figma real, leitura e escrita).
 - **Piloto de provedor de LLM em nuvem** — adiado até haver necessidade real comprovada, mesmo padrão que motivou sua adoção em PM/PO/SA.
-- **Memória institucional de respostas de refinamento (RAG)** — já implementada nos agentes irmãos Product Manager e Product Owner; cotada como oportunidade a considerar desde o dia 1 da implementação deste agente, mas não incluída na Fase 1 por padrão (ver `docs/agent/memory.md`).
 - **Integração SA↔UX Designer** (Solution Architect consumindo a UX Specification como contexto adicional) — não implementada nesta fase, extensão natural a considerar quando houver demanda real.
 
 ## 12. Como executar

@@ -8,7 +8,7 @@ Agente que gera UX Specifications (fluxos de navegação por tarefa, arquitetura
 
 Este é um **repositório standalone**, próprio, independente de qualquer monorepo — não assuma dependências herdadas de um workspace pai.
 
-**Status atual**: Fase 1 (MVP) implementada — `src/` tem models/skills/workflow/orchestrator/services completos, `run.py` funcional, `tests/` com 78 testes (99% cobertura, tudo mockado).
+**Status atual**: Fase 1 (MVP) implementada — `src/` tem models/skills/workflow/orchestrator/services completos, `run.py` funcional, `tests/` com 92 testes (98% cobertura, tudo mockado).
 
 ## Comandos essenciais
 
@@ -30,7 +30,7 @@ Não há configuração própria de lint/type-check (`ruff`/`basedpyright`) nest
 
 ## Setup local
 
-Ver a seção "Setup"/"Configuração" em `README.md`/`README.pt.md`: requer Python 3.12+, `uv`, Ollama instalado com os modelos `mistral` e `phi4` baixados, e um `.env` preenchido a partir de `.env.example`.
+Ver a seção "Setup"/"Configuração" em `README.md`/`README.pt.md`: requer Python 3.12+, `uv`, Ollama instalado com os modelos `mistral`, `phi4` e `bge-m3` baixados, e um `.env` preenchido a partir de `.env.example`.
 
 ## Arquitetura (resumo — detalhe completo em `docs/agent/system_design.md` e `WHITEPAPER.md`)
 
@@ -40,10 +40,10 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 ```
 
 - `src/aqua_qe_ux_designer/models/` — `UXSpecification`, `UserFlow`, `InformationArchitecture`, enum `ArtifactStatus`. Sem `ChatMessage` — este agente não tem skill de chat (`agent_manifest.yaml` só lista `confluence`/`jira` como inputs).
-- `src/aqua_qe_ux_designer/skills/` — 15 funções de responsabilidade única (ver `docs/agent/skills.md`).
+- `src/aqua_qe_ux_designer/skills/` — 17 funções de responsabilidade única (ver `docs/agent/skills.md`).
 - `src/aqua_qe_ux_designer/workflow/generate_ux_specification.py` — `generate_ux_specification`, `finalize_ux_specification` (validate→review), `refine_and_finalize_ux_specification`.
 - `src/aqua_qe_ux_designer/orchestrator/ux_designer.py` — ponto de entrada único, `handle_request(texto_prd, texto_ticket)`.
-- `src/aqua_qe_ux_designer/services/` — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado verbatim do Solution Architect).
+- `src/aqua_qe_ux_designer/services/` — integrações externas: `llm_service` (Ollama), `jira_service` (REST API + httpx, **apenas leitura**), `confluence_service` (REST API + httpx, **leitura e escrita** — reaproveitado verbatim do Solution Architect), `embedding_service`/`rag_service` (Ollama `bge-m3` + Qdrant embarcado — memória institucional de refinamento, ver abaixo).
 
 ## Convenções críticas
 
@@ -59,6 +59,7 @@ Entrada (Story/Epic via Jira + PRD via Confluence)
 - **`jira_service` é apenas leitura** — mesmo princípio do Solution Architect; não há hoje um caso de uso real de write-back no Jira a partir de uma UX Specification.
 - **`confluence_service` tem escrita gated** — publicar (`--publicar-confluence`, cria página nova, sempre irmã da página de origem do PRD) ou atualizar (`--atualizar-confluence`, edita uma página existente informada) sempre exigem confirmação humana explícita no CLI, mutuamente exclusivos entre si — reaproveita literalmente `get_confluence_publish_location`/`create_confluence_page`/`update_confluence_page` do Solution Architect.
 - **Este agente nunca gera PRD** (Product Manager), **nunca gera Épicos/User Stories** (Product Owner), **nunca projeta arquitetura técnica** (Solution Architect). Consome os artefatos já prontos desses três agentes e produz um único artefato novo, a UX Specification.
+- **Memória institucional de respostas de refinamento** (`record_refinement_answer`/`suggest_refinement_answer`, `rag_service.py`, issue [#3](https://github.com/dufelizardo/AQuA-QE-UX-Designer/issues/3)): cada resposta que o humano dá num ciclo de refinamento é gravada numa collection Qdrant embarcada própria (`refinement_answer_memory`) via embedding local (`bge-m3`). No ciclo seguinte, se uma pergunta parecida aparecer (mesmo ou outro artefato/projeto), a resposta mais similar já dada é exibida como sugestão no terminal, com o score de similaridade — **nunca aplicada automaticamente**. Sem gate de score mínimo e sem filtro por tipo de artefato. Mesmo padrão já validado ao vivo em PM/PO.
 - **Testes sempre mockam** Ollama/Jira/Confluence — nenhum teste em `tests/` deve fazer chamada real de rede, quando a implementação começar.
 
 ## Onde procurar mais detalhe
