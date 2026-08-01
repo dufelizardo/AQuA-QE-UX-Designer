@@ -1,3 +1,5 @@
+import ast
+
 from ..services.llm_service import complete_json
 
 _SYSTEM = (
@@ -56,10 +58,15 @@ def _valor_para_string(valor) -> str:
 
 
 def _dict_para_texto(dicionario: dict) -> str:
-    """Achata um dict devolvido no lugar de uma string de personas/jornada — cobre tanto um
-    dict de nome->detalhes (ex.: personas por nome, com sub-dict de descrição/objetivos) quanto
-    um dict de passo->'' (ex.: jornada com cada passo como chave e valor vazio), um item por
-    linha no resultado."""
+    """Achata um dict devolvido no lugar de uma string de personas/jornada — cobre um dict de
+    nome->detalhes (ex.: personas por nome, com sub-dict de descrição/objetivos), um dict de
+    passo->'' (ex.: jornada com cada passo como chave e valor vazio), e um dict com uma única
+    chave-artefato mapeando para a lista de passos (ex.: {"caminho": [...]}, achado ao vivo) —
+    nesse último caso a chave não tem valor de rótulo real, então é descartada."""
+    if len(dicionario) == 1:
+        ((unica_chave, unico_valor),) = dicionario.items()
+        if isinstance(unico_valor, list):
+            return "\n".join(_item_para_string(item) for item in unico_valor)
     linhas = []
     for chave, valor in dicionario.items():
         detalhe = _valor_para_string(valor)
@@ -67,13 +74,33 @@ def _dict_para_texto(dicionario: dict) -> str:
     return "\n".join(linhas)
 
 
+def _string_como_estrutura(valor: str):
+    """Defesa contra o LLM devolver uma string cujo próprio conteúdo é um repr de dict/list
+    Python (aspas simples, ex.: "{'Cidadãos': {'descricao': ...}}") em vez de prosa — achado ao
+    vivo (Groq/llama-3.3-70b-versatile): o campo chega como string (não como objeto/array JSON),
+    então as checagens de isinstance(dict)/isinstance(list) abaixo não disparam sozinhas."""
+    texto = valor.strip()
+    if not texto or texto[0] not in "{[":
+        return None
+    try:
+        estrutura = ast.literal_eval(texto)
+    except (ValueError, SyntaxError):
+        return None
+    return estrutura if isinstance(estrutura, (dict, list)) else None
+
+
 def _texto_ou_lista(valor) -> str:
-    """Defesa contra o LLM devolver uma lista ou um dict (em formatos variados, achado ao vivo
-    em execuções diferentes) em vez de uma única string para personas/jornada."""
+    """Defesa contra o LLM devolver uma lista, um dict, ou uma string com repr de dict/list
+    (em formatos variados, achados ao vivo em execuções diferentes) em vez de uma única string
+    de prosa para personas/jornada."""
     if isinstance(valor, dict):
         return _dict_para_texto(valor)
     if isinstance(valor, list):
         return "\n".join(_item_para_string(item) for item in valor)
+    if isinstance(valor, str):
+        estrutura = _string_como_estrutura(valor)
+        if estrutura is not None:
+            return _texto_ou_lista(estrutura)
     return valor or ""
 
 
