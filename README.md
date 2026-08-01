@@ -29,7 +29,7 @@ This project has its own git repository, independent from the root monorepo (per
 - **`src/aqua_qe_ux_designer/skills/`** — 17 single-responsibility functions (see `docs/agent/skills.md`).
 - **`src/aqua_qe_ux_designer/workflow/`** — orchestrates the skill sequence.
 - **`src/aqua_qe_ux_designer/orchestrator/`** — single entry point (`handle_request`).
-- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama by default, no cloud provider pilot at this phase), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect).
+- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama by default, plus a cloud provider toggle — `LLM_PROVIDER=nvidia|cerebras|google|groq`), `jira_service` (read-only), `confluence_service` (read + gated write, reused from Solution Architect), `embedding_service`/`rag_service` (Ollama `bge-m3` + embedded Qdrant — institutional refinement memory).
 
 ## Setup
 

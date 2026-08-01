@@ -62,6 +62,7 @@ dependencies = [
     "httpx>=0.28",
     "python-dotenv>=1.0",
     "qdrant-client>=1.12",  # usado por services/rag_service.py, embarcado/local — ver CLAUDE.md
+    "openai>=1.0",  # piloto de provedor de LLM em nuvem (LLM_PROVIDER=nvidia|cerebras|google|groq) — ver CLAUDE.md
 ]
 
 [tool.pytest.ini_options]

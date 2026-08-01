@@ -91,7 +91,7 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 
 ## 9. Stack técnico
 
-- **LLM local via Ollama (único provedor nesta fase)** — `mistral` para geração, `phi4` como revisor independente. Diferente de PM/PO/SA, **este agente não nasce com o piloto de provedor em nuvem** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — esse toggle só foi adicionado nos agentes irmãos depois de necessidade real comprovada (rate limit, instabilidade); aqui, é adicionado quando/se a mesma necessidade surgir, não construído antecipadamente.
+- **LLM via Ollama (padrão) ou provedor em nuvem** — `mistral`/`phi4` localmente por padrão; `LLM_PROVIDER=nvidia|cerebras|google|groq` disponível como piloto (issue [#2](https://github.com/dufelizardo/AQuA-QE-UX-Designer/issues/2)), adicionado depois de necessidade real comprovada — rodadas ao vivo com Ollama local levaram 10-24 minutos cada por competição de CPU, mesmo padrão que motivou a adoção do toggle em PM/PO/SA. Groq (`llama-3.3-70b-versatile`/`openai/gpt-oss-120b`, 30 req/min) é o provedor em nuvem mais estável validado ao vivo até agora nesta plataforma.
 - **`uv`** para dependências — projeto standalone (repositório próprio, fora do monorepo que o originou).
 - **Sem RAG sobre `knowledge/methodology/` nesta fase** — só 5 arquivos, pequeno o suficiente para caber direto no prompt de cada skill. Há, porém, embedding/RAG para um propósito específico: memória institucional de respostas de refinamento (`embedding_service`/`rag_service`, Qdrant embarcado — ver seção 6/`docs/agent/memory.md`).
 
@@ -104,7 +104,6 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 - **Personas e User Journeys** — permanentemente fora de escopo deste agente (não uma questão de fase): já são responsabilidade do Product Manager. Gerá-los aqui também criaria duas fontes divergentes do mesmo artefato.
 - **Pesquisa com usuário real e Teste de Usabilidade real** — permanentemente fora de escopo: o agente não tem acesso a usuários reais nem telemetria de produto (Hotjar, Google Analytics, Mixpanel, Amplitude, Maze). Substituídos por revisão heurística de especialista, nunca apresentada como pesquisa/teste real.
 - **Wireframes, Protótipos e Design System** — adiado para um agente irmão futuro, o **AQuA-QE UI Designer** (nome já definido, escopo ainda não formalizado). Requer a primeira integração não-textual da plataforma (Figma real, leitura e escrita).
-- **Piloto de provedor de LLM em nuvem** — adiado até haver necessidade real comprovada, mesmo padrão que motivou sua adoção em PM/PO/SA.
 - **Integração SA↔UX Designer** (Solution Architect consumindo a UX Specification como contexto adicional) — não implementada nesta fase, extensão natural a considerar quando houver demanda real.
 
 ## 12. Como executar

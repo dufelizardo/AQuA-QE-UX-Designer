@@ -50,7 +50,7 @@ Um único fluxo nesta fase — gerar a UX Specification a partir de uma Story/Ep
 ## Restrições técnicas
 
 - Dois LLMs locais via Ollama por padrão (`OLLAMA_MODEL` gerador, `OLLAMA_REVIEW_MODEL` revisor) — mesma convenção de PM/PO/SA.
-- **Sem piloto de provedor em nuvem nesta fase** — diferente de PM/PO/SA (que adicionaram o toggle `LLM_PROVIDER` depois de necessidade real comprovada), este agente nasce só com Ollama; o toggle é adicionado quando/se surgir o mesmo tipo de necessidade (rate limit, instabilidade), não construído antecipadamente.
+- **Piloto de provedor de LLM em nuvem** — `LLM_PROVIDER=ollama|nvidia|cerebras|google|groq`, padrão `ollama`. Adicionado depois de necessidade real comprovada (rodadas locais lentas em uso ao vivo), mesmo padrão de PM/PO/SA.
 - Sem RAG/embeddings nesta fase — `knowledge/methodology/` é pequeno o suficiente para caber direto no prompt de cada skill.
 - Jira é só leitura, sem escrita — mesmo princípio de "nenhum serviço construído sem consumidor real" já aplicado em PM/PO/SA (não há hoje um caso de uso real de write-back no Jira a partir de uma UX Specification). Confluence tem escrita gated (publicar), sempre atrás de confirmação humana e sempre como página irmã da fonte — reaproveita literalmente o `confluence_service.py` do Solution Architect (`get_confluence_publish_location`/`create_confluence_page`, já provado).
 

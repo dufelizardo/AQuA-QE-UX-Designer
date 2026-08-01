@@ -91,7 +91,7 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 
 ## 9. Technical stack
 
-- **Local LLM via Ollama (sole provider at this phase)** — `mistral` for generation, `phi4` as independent reviewer. Unlike PM/PO/SA, **this agent is not born with the cloud provider pilot** (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — that toggle was only added to the sibling agents after real, proven need (rate limits, instability); here, it's added when/if the same need arises, not built ahead of time.
+- **LLM via Ollama (default) or a cloud provider** — `mistral`/`phi4` locally by default; `LLM_PROVIDER=nvidia|cerebras|google|groq` available as a pilot (issue [#2](https://github.com/dufelizardo/AQuA-QE-UX-Designer/issues/2)), added after real, proven need — live runs on local Ollama took 10-24 minutes each due to CPU contention, the same pattern that motivated adopting the toggle in PM/PO/SA. Groq (`llama-3.3-70b-versatile`/`openai/gpt-oss-120b`, 30 req/min) is the most stable cloud provider validated live on this platform so far.
 - **`uv`** for dependencies — standalone project (own repository, outside the monorepo that originated it).
 - **No RAG over `knowledge/methodology/` at this phase** — only 5 files, small enough to fit directly in each skill's prompt. There is, however, embedding/RAG for one specific purpose: institutional memory of refinement answers (`embedding_service`/`rag_service`, embedded Qdrant — see section 6/`docs/agent/memory.md`).
 
@@ -104,7 +104,6 @@ A single flow at this phase — generate the UX Specification from a Story/Epic 
 - **Personas and User Journeys** — permanently out of scope for this agent (not a phasing question): already the Product Manager's responsibility. Generating them here too would create two diverging sources of the same artifact.
 - **Research with real users and real Usability Testing** — permanently out of scope: the agent has no access to real users or product telemetry (Hotjar, Google Analytics, Mixpanel, Amplitude, Maze). Replaced by expert heuristic review, never presented as real research/testing.
 - **Wireframes, Prototypes, and Design System** — deferred to a future sibling agent, **AQuA-QE UI Designer** (name already defined, scope not yet formalized). Requires the platform's first non-text integration (real Figma, read and write).
-- **Cloud LLM provider pilot** — deferred until real, proven need exists, same pattern that motivated its adoption in PM/PO/SA.
 - **SA↔UX Designer integration** (Solution Architect consuming the UX Specification as additional context) — not implemented at this phase, a natural extension to consider once real demand exists.
 
 ## 12. How to run

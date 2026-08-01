@@ -29,7 +29,7 @@ Este projeto tem repositório git próprio, independente do monorepo raiz (confo
 - **`src/aqua_qe_ux_designer/skills/`** — 17 funções de responsabilidade única (ver `docs/agent/skills.md`).
 - **`src/aqua_qe_ux_designer/workflow/`** — orquestração da sequência de skills.
 - **`src/aqua_qe_ux_designer/orchestrator/`** — ponto de entrada único (`handle_request`).
-- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama por padrão, sem piloto de provedor em nuvem nesta fase), `jira_service` (apenas leitura), `confluence_service` (leitura + escrita gated, reaproveitado do Solution Architect).
+- **`src/aqua_qe_ux_designer/services/`** — `llm_service` (Ollama por padrão, mais um toggle de provedor em nuvem — `LLM_PROVIDER=nvidia|cerebras|google|groq`), `jira_service` (apenas leitura), `confluence_service` (leitura + escrita gated, reaproveitado do Solution Architect), `embedding_service`/`rag_service` (Ollama `bge-m3` + Qdrant embarcado — memória institucional de refinamento).
 
 ## Configuração
 

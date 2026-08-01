@@ -36,7 +36,7 @@ Gerar uma UX Specification a partir de um PRD (Product Manager) e das Épicos/St
 - **Pesquisa com usuário real** (entrevistas, observação, pesquisas) e **Testes de Usabilidade reais** (com usuários observados) — permanentemente fora: o agente não tem acesso a usuários reais nem telemetria de produto; qualquer versão honesta dessas especialidades exigiria uma fonte de dado que não existe. Substituídas por revisão heurística de especialista (Nielsen), nunca apresentada como pesquisa/teste real.
 - Integrações com Maze, Hotjar, Google Analytics, Mixpanel, Amplitude — mesma razão acima.
 - Escrita em Jira (o agente só lê essa fonte, mesmo princípio do Solution Architect).
-- Piloto de provedor de LLM em nuvem (`LLM_PROVIDER=nvidia|cerebras|google|groq`) — Fase 1 usa só Ollama local; toggle é adicionado quando houver necessidade real comprovada, como aconteceu nos três agentes irmãos.
+- Piloto de provedor de LLM em nuvem (`LLM_PROVIDER=ollama|nvidia|cerebras|google|groq`, padrão `ollama`) — implementado após necessidade real comprovada (rodadas locais lentas em uso real), mesmo padrão adotado nos três agentes irmãos.
 - RAG/memória de projeto ou longo prazo.
 
 ## Requisitos funcionais
