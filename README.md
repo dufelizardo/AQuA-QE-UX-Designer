@@ -7,6 +7,20 @@ An agent that generates **UX Specifications** — task-level navigation flows, i
 **What's the benefit**: every flow step traceable to the source requirement, accessibility grounded in WCAG 2.2, Personas/Journeys never re-invented (always cited from the PRD) — never two diverging sources of the same artifact.
 **How it works (high level)**: Story/Epic + PRD → User Flow + Information Architecture → accessibility recommendations → validate → review (Nielsen's heuristics) → [refine] → human accepts.
 
+## Example
+
+**Input**: a Story/Epic (Jira) + the associated PRD (Confluence).
+
+**Output** — a real UX Specification generated live this way ("Agendamento Assistido Presencial"), with these sections:
+
+```
+1. Objetivo          5. Information Architecture   9. Protótipos
+2. Escopo            6. Recomendações de           10. Regras de Usabilidade
+3. Personas             Acessibilidade              11. Design System
+4. User Flows        7. User Journey                12. Recomendações
+                      8. Wireframes                  Rastreabilidade
+```
+
 **Status**: Phase 1 (MVP) implemented, following the same generate→validate→review→human-accept pattern already used by the three sibling agents.
 
 This project has its own git repository, independent from the root monorepo (per the "every new project gets its own repository" convention — see the root `CLAUDE.md`).

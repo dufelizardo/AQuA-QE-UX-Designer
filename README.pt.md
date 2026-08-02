@@ -7,6 +7,20 @@ Agente que gera **UX Specifications** — fluxos de navegação por tarefa, arqu
 **Qual o benefício**: cada passo do fluxo rastreável ao requisito de origem, acessibilidade fundamentada em WCAG 2.2, Personas/Jornadas nunca reinventadas (sempre citadas da PRD) — nunca duas fontes divergentes do mesmo artefato.
 **Como funciona (alto nível)**: Story/Epic + PRD → User Flow + Arquitetura da Informação → recomendações de acessibilidade → valida → revisa (heurísticas de Nielsen) → [refina] → aceite humano.
 
+## Exemplo
+
+**Entrada**: uma Story/Epic (Jira) + a PRD associada (Confluence).
+
+**Saída** — uma UX Specification real gerada ao vivo desta forma ("Agendamento Assistido Presencial"), com estas seções:
+
+```
+1. Objetivo          5. Information Architecture   9. Protótipos
+2. Escopo            6. Recomendações de           10. Regras de Usabilidade
+3. Personas             Acessibilidade              11. Design System
+4. User Flows        7. User Journey                12. Recomendações
+                      8. Wireframes                  Rastreabilidade
+```
+
 **Status**: Fase 1 (MVP) implementada, seguindo o mesmo padrão gerar→validar→revisar→aceite humano já usado nos três agentes irmãos.
 
 Este projeto tem repositório git próprio, independente do monorepo raiz (conforme a convenção "todo projeto novo recebe repositório separado" — ver `CLAUDE.md` raiz do workspace).
