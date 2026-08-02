@@ -1,5 +1,7 @@
 # AQuA-QE UX Designer
 
+![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue) ![Arquitetura: humano-no-loop](https://img.shields.io/badge/arquitetura-humano--no--loop-blueviolet)
+
 Agente que gera **UX Specifications** — fluxos de navegação por tarefa, arquitetura da informação e recomendações de acessibilidade — a partir de uma Story/Epic já pronta do [AQuA-QE Product Owner](https://github.com/dufelizardo/AQuA-QE-Product-Owner) e do PRD associado do [AQuA-QE Product Manager](https://github.com/dufelizardo/AQuA-QE-Product-Manager). Com rastreabilidade obrigatória à fonte, validação automática e revisão humana no centro do ciclo. Ver `WHITEPAPER.md` para a visão completa.
 
 **Qual problema resolve**: transforma uma Story/Epic aceita + a PRD associada numa UX Specification concreta, em vez de diagramar fluxos manualmente.
