@@ -2,6 +2,11 @@
 
 An agent that generates **UX Specifications** — task-level navigation flows, information architecture, and accessibility recommendations — from an already-finished Story/Epic from the [AQuA-QE Product Owner](https://github.com/dufelizardo/AQuA-QE-Product-Owner) and the associated PRD from the [AQuA-QE Product Manager](https://github.com/dufelizardo/AQuA-QE-Product-Manager). With mandatory traceability to source, automatic validation, and human review at the center of the cycle. See `WHITEPAPER.en.md` for the full picture.
 
+**What problem it solves**: turns an accepted Story/Epic + its PRD into a concrete UX Specification, instead of diagramming flows by hand.
+**Who uses it**: UX designers who need a grounded starting draft (navigation flow, information architecture, accessibility notes) before their own design work.
+**What's the benefit**: every flow step traceable to the source requirement, accessibility grounded in WCAG 2.2, Personas/Journeys never re-invented (always cited from the PRD) — never two diverging sources of the same artifact.
+**How it works (high level)**: Story/Epic + PRD → User Flow + Information Architecture → accessibility recommendations → validate → review (Nielsen's heuristics) → [refine] → human accepts.
+
 **Status**: Phase 1 (MVP) implemented, following the same generate→validate→review→human-accept pattern already used by the three sibling agents.
 
 This project has its own git repository, independent from the root monorepo (per the "every new project gets its own repository" convention — see the root `CLAUDE.md`).

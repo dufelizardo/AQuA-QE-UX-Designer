@@ -2,6 +2,11 @@
 
 Agente que gera **UX Specifications** — fluxos de navegação por tarefa, arquitetura da informação e recomendações de acessibilidade — a partir de uma Story/Epic já pronta do [AQuA-QE Product Owner](https://github.com/dufelizardo/AQuA-QE-Product-Owner) e do PRD associado do [AQuA-QE Product Manager](https://github.com/dufelizardo/AQuA-QE-Product-Manager). Com rastreabilidade obrigatória à fonte, validação automática e revisão humana no centro do ciclo. Ver `WHITEPAPER.md` para a visão completa.
 
+**Qual problema resolve**: transforma uma Story/Epic aceita + a PRD associada numa UX Specification concreta, em vez de diagramar fluxos manualmente.
+**Quem usa**: UX designers que precisam de um rascunho fundamentado (fluxo de navegação, arquitetura da informação, notas de acessibilidade) antes do próprio trabalho de design.
+**Qual o benefício**: cada passo do fluxo rastreável ao requisito de origem, acessibilidade fundamentada em WCAG 2.2, Personas/Jornadas nunca reinventadas (sempre citadas da PRD) — nunca duas fontes divergentes do mesmo artefato.
+**Como funciona (alto nível)**: Story/Epic + PRD → User Flow + Arquitetura da Informação → recomendações de acessibilidade → valida → revisa (heurísticas de Nielsen) → [refina] → aceite humano.
+
 **Status**: Fase 1 (MVP) implementada, seguindo o mesmo padrão gerar→validar→revisar→aceite humano já usado nos três agentes irmãos.
 
 Este projeto tem repositório git próprio, independente do monorepo raiz (conforme a convenção "todo projeto novo recebe repositório separado" — ver `CLAUDE.md` raiz do workspace).
